@@ -1,0 +1,212 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #2c3e50;
+    --card-bg: white;
+    --accent-color: #2ecc71;
+    --footer-bg: #145a32;
+    --section-alt-bg: #ecf9f1;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1e1e1e;
+    --text-color: #ecf0f1;
+    --card-bg: #2c2c2c;
+    --accent-color: #2faf72;
+    --footer-bg: #0d4630;
+    --section-alt-bg: #b2d1ba; /* Dark mode ka light green */
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+nav .logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.theme-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    user-select: none;
+}
+
+
+.theme-toggle {
+    appearance: none;
+    width: 50px;
+    height: 25px;
+    background: var(--accent-color);
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 19px;
+    height: 19px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+[data-theme="dark"] .theme-toggle::before {
+    transform: translateX(25px);
+}
+
+.hero {
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+    position: relative;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(39, 174, 96, 0.35);
+    backdrop-filter: blur(3px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: auto;
+    color: white;
+}
+
+.upload-box {
+    background: var(--card-bg);
+    border: 3px dashed var(--accent-color);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.upload-btn {
+    background: var(--accent-color);
+    border: none;
+    padding: 12px 24px;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.upload-btn:hover {
+    filter: brightness(0.9);
+}
+
+.caption {
+    font-size: 14px;
+    color: #ecf0f1;
+}
+
+.tagline {
+    font-size: 26px;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.section {
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    text-align: center;
+}
+
+.step-icon {
+    font-size: 40px;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s, color 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 36px;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+footer {
+    background: var(--footer-bg);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.alt-section {
+    background: var(--section-alt-bg);
+}
