@@ -136,7 +136,7 @@ userSchema.Schema.methods.comparePassword = async function (candidatePassword) {
 
         return await bcrypt.compare(candidatePassword, userWithPassword.password);
 
-    } catch (error) {
+    } catch (error) {  
         throw error;
     }
 }
