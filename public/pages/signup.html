@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="/public/css/auth.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <form action="">
+            <h1 class="login-title">Register</h1>
+            <div class="input-box">
+                <input class="form-input" type="text" placeholder="Username " required>
+                <i class='bx  bxs-user'></i>
+            </div>
+
+
+            <div class="input-box">
+                <input class="form-input" type="email" placeholder="E-mail" required>
+                <i class='bx  bxs-envelope-open'></i>
+            </div>
+
+
+            <div class="input-box">
+                <input class="form-input" type="password" id="pass" placeholder="password" required>
+                <i class='bx  bx-eye bx-rotate-180' style='fill:#fff' ,visibility="none"></i>
+                <div class="strength-bar">
+                    <div id="strength">
+
+                    </div>
+                    <p id="strength-text" class="strength-text"></p>
+                </div>
+            </div>
+
+            <div class="input-box">
+                <input class="form-input" type="password" placeholder="Confirm Password" required>
+                <i class='bx  bx-eye bx-rotate-180' style='color:#fff'></i>
+                <!-- <i class='bx  bxs-lock'  style='color:#333'></i>  -->
+            </div>
+
+            <div class="remember-forget">
+                <label for=""> <input type="checkbox">I Agree terms & conditions</label>
+
+            </div>
+
+            <button class="btn" type="submit">Register</button>
+            <button class="btn"><img width="20" height="20" id="google"
+                    src="https://img.icons8.com/fluency/48/google-logo.png" alt="google-logo" />Continue with
+                Google</button>
+            <div class="register">
+                <p> Already have any acccount ? <br><a href="#" id="log">Login</a></p>
+            </div>
+        </form>
+
+
+    </div>
+
+
+
+
+</body>
+
+<script>
+    const password = document.getElementById('pass');
+    const strengthBar = document.getElementById('strength');
+    const strengthText = document.getElementById('strength-text');
+
+    password.addEventListener('input', () => {
+        const val = password.value;
+        let strength = 0;
+
+        if (val.match(/[a-z]+/)) strength += 1;
+        if (val.match(/[A-Z]+/)) strength += 1;
+        if (val.match(/[0-9]+/)) strength += 1;
+        if (val.match(/[$@#&!]+/)) strength += 1;
+        if (val.length >= 8) strength += 1;
+
+        switch (strength) {
+            case 0:
+                strengthBar.style.width = '0%';
+                strengthText.textContent = '';
+                break;
+            case 1:
+                strengthBar.style.width = '20%';
+                strengthBar.style.background = 'red';
+                strengthText.textContent = 'Weak';
+                strengthText.style.color = 'red';
+                break;
+            case 2:
+                strengthBar.style.width = '40%';
+                strengthBar.style.background = 'orange';
+                strengthText.textContent = 'Fair';
+                strengthText.style.color = 'orange';
+                break;
+            case 3:
+                strengthBar.style.width = '60%';
+                strengthBar.style.background = 'yellow';
+                strengthText.textContent = 'Good';
+                strengthText.style.color = 'goldenrod';
+                break;
+            case 4:
+                strengthBar.style.width = '80%';
+                strengthBar.style.background = 'blue';
+                strengthText.textContent = 'Strong';
+                strengthText.style.color = 'blue';
+                break;
+            case 5:
+                strengthBar.style.width = '100%';
+                strengthBar.style.background = 'green';
+                strengthText.textContent = 'Very Strong';
+                strengthText.style.color = 'green';
+                break;
+        }
+    });
+</script>
+
+</html>
