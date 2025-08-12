@@ -1,11 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ecoloop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    
+    <div class="page1">
+        <video autoplay muted loop playsinline class="bg-video">
+            <source src="/public/images/Abstract_Shape_Animation_Generation.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="navdiv">
+            <nav>
+                <div class="logo">Ecoloop</div>
+                <div class="nav-links" id="nav-links">
+                    <a href="#">Log in</a>
+                </div>
+            </nav>
+        </div>
+        <div class="glassbg">
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="tagline-top">
+                        <span class="badge">🌱 Circular Living Made Simple</span>
+                    </div>
+
+                    <h1>
+                        Transform Waste <span style="color: white;">into</span> <br>
+                        Sustainable Impact
+                    </h1>
+
+                    <p class="subtitle">
+                        Scan items before you discard them. Get personalized suggestions for reuse, donation, or proper
+                        recycling.
+                        Track your environmental impact and join a community of eco-warriors.
+                    </p>
+
+                    <div class="links">
+                        <a href="#"> ⌞ ⌝ㅤStart scanning</a>
+                        <b href="#">view dashboard</b>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src="../images/Pi7_cropper.png" alt="Eco-friendly Illustration">
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+    <div class="page2">
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Powerful AI-Driven Features</h2>
+                    <p class="section-subtitle">
+                        Experience the future of sustainable living with our comprehensive platform
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img style="scale: 0.5;" src="../images/Scoop.png" alt="AI Analysis">
+                        </div>
+                        <h3 class="feature-title">AI Image Analysis</h3>
+                        <p class="feature-description">
+                            Upload any item and get instant AI-powered analysis with personalized sustainability
+                            recommendations.
+                        </p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img src="../images/icons/recycle.svg" alt="Smart Recycling">
+                        </div>
+                        <h3 class="feature-title">Smart Recycling Guide</h3>
+                        <p class="feature-description">
+                            Find local recycling centers, get proper disposal instructions, and learn about
+                            material-specific guidelines.
+                        </p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img src="../images/icons/reuse.svg" alt="Creative Reuse">
+                        </div>
+                        <h3 class="feature-title">Creative Reuse Ideas</h3>
+                        <p class="feature-description">
+                            Discover innovative ways to repurpose items with DIY projects and creative solutions.
+                        </p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img style="scale: 0.5;" src="../images/pin.png" alt="Donation Network">
+                        </div>
+                        <h3 class="feature-title">Donation Network</h3>
+                        <p class="feature-description">
+                            Connect with local charities and organizations that need your items, making donation easy.
+                        </p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img style="scale: 1;" src="../images/Home Page 1.png" alt="Impact Tracking">
+                        </div>
+                        <h3 class="feature-title">Impact Dashboard</h3>
+                        <p class="feature-description">
+                            Track your environmental impact with detailed analytics and see how you're making a di
+                            fference.
+                        </p>
+                    </div>
+                    <div class="feature-card glass">
+                        <div class="feature-icon">
+                            <img style="scale: 0.5;" src="../images/people.png" alt="Community">
+                        </div>
+                        <h3 class="feature-title">Community Insights</h3>
+                        <p class="feature-description">
+                            Join a community of eco-conscious individuals and share sustainability achievements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <div class="page3">
+        <!-- Fixed Parallax Background -->
+        <div class="parallax-bg"></div>
+
+        <!-- Vertical Progress Bar -->
+        <div class="vertical-progress">
+            <div class="vertical-progress-fill" id="verticalProgressFill"></div>
+            <div class="progress-steps">
+                <div class="progress-step" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+            </div>
+        </div>
+
+        <!-- Scrolling Content -->
+        <div class="content-container">
+            <!-- Step 1: Upload & Analyze -->
+            <div class="step-section" id="step1">
+                <div class="step-content">
+                    <div class="step-info">
+                        <div class="step-number">1</div>
+                        <h2 class="step-title">Upload & Analyze</h2>
+                        <p class="step-description">
+                            Take a photo of any item you want to dispose of responsibly. Our AI
+                            instantly analyzes the material, condition, and sustainability options.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="safari" role="region" aria-label="browser window">
+                            <div class="safari-top">
+                                <div class="safari-controls">
+                                    <div class="traffic" aria-hidden="true">
+                                        <span class="dot red"></span>
+                                        <span class="dot yellow"></span>
+                                        <span class="dot green"></span>
+                                    </div>
+                                </div>
+
+                                <div class="tabs" role="tablist" aria-label="tabs">
+                                    <div class="tab active" role="tab" aria-selected="true">Ecoloop — Docs</div>
+                                    <div class="tab" role="tab">Examples</div>
+                                    <div class="tab" role="tab">Playground</div>
+                                </div>
+
+                                <div style="width:8px"></div>
+                            </div>
+
+                            <div class="toolbar" role="toolbar" aria-label="browser toolbar">
+                                <div class="nav">
+                                    <div class="btn" title="Back">◀</div>
+                                    <div class="btn" title="Forward">▶</div>
+                                </div>
+
+                                <div class="address" role="search">
+                                    <div class="favicon" aria-hidden="true"></div>
+                                    <input aria-label="address bar"
+                                        value="https://ecoloop.com" readonly />
+                                </div>
+
+                                <div class="actions">
+                                    <div class="btn" title="Share">⤴</div>
+                                    <div class="btn" title="Bookmarks">★</div>
+                                    <div class="btn" title="Settings">⋯</div>
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <div class="card">
+                                    <div class="mock-site">
+                                        <video muted loop autoplay src="/public/images/Drag & drop.mp4"></video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Get Recommendations -->
+            <div class="step-section" id="step2">
+                <div class="step-content">
+                    <div class="step-info">
+                        <div class="step-number">2</div>
+                        <h2 class="step-title">Get Recommendations</h2>
+                        <p class="step-description">
+                            Receive personalized recommendations for recycling, reusing, or
+                            donating your item, complete with local resources and DIY ideas.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="options-panel">
+                            <div class="option-button">
+                                <span class="option-icon">♻️</span>
+                                <span>Recycle Nearby</span>
+                            </div>
+                            <div class="option-button">
+                                <span class="option-icon">🔄</span>
+                                <span>Creative Reuse</span>
+                            </div>
+                            <div class="option-button">
+                                <span class="option-icon">❤️</span>
+                                <span>Donate Locally</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Track Your Impact -->
+            <div class="step-section" id="step3">
+                <div class="step-content">
+                    <div class="step-info">
+                        <div class="step-number">3</div>
+                        <h2 class="step-title">Track Your Impact</h2>
+                        <p class="step-description">
+                            Monitor your environmental contribution with detailed analytics showing
+                            CO2 saved, waste diverted, and community impact.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="analytics-chart">
+                            <h4 class="chart-title">Your Environmental Impact</h4>
+                            <div class="chart-bars">
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- <div class="page3">
+        <div class="vertical-progress">
+            <div class="vertical-progress-fill" id="verticalProgressFill"></div>
+            <div class="progress-steps">
+                <div class="progress-step" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+            </div>
+        </div>
+        <div class="step-section" id="step1">
+            <div class="step-content">
+                <div class="step-info">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Upload & Analyze</h2>
+                    <p class="step-description">
+                        Take a photo of any item you want to dispose of responsibly. Our AI
+                        instantly analyzes the material, condition, and sustainability options.
+                    </p>
+                </div>
+                <div class="step-visual">
+                    <div class="safari" role="region" aria-label="browser window">
+                        <div class="safari-top">
+                            <div class="safari-controls">
+                                <div class="traffic" aria-hidden="true">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                            </div>
+
+                            <div class="tabs" role="tablist" aria-label="tabs">
+                                <div class="tab active" role="tab" aria-selected="true">Upload</div>
+                                <div class="tab" role="tab">Examples</div>
+                                <div class="tab" role="tab">Playground</div>
+                            </div>
+
+                            <div style="width:8px"></div>
+                        </div>
+
+                        <div class="toolbar" role="toolbar" aria-label="browser toolbar">
+                            <div class="nav">
+                                <div class="btn" title="Back">◀</div>
+                                <div class="btn" title="Forward">▶</div>
+                            </div>
+
+                            <div class="address" role="search">
+                                <div class="favicon" aria-hidden="true"></div>
+                                <input aria-label="address bar" value="https:/ecoloop.com" readonly />
+                            </div>
+
+                            <div class="actions">
+                                <div class="btn" title="Share">⤴</div>
+                                <div class="btn" title="Bookmarks">★</div>
+                                <div class="btn" title="Settings">⋯</div>
+                            </div>
+                        </div>
+
+                        <div class="content">
+                            <div class="card">
+                                <div class="mock-site">
+                                    <video loop autoplay  src="/public/images/Drag & drop.mp4"></video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section" id="step2">
+            <div class="step-content">
+                <div class="step-info">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Get Recommendations</h2>
+                    <p class="step-description">
+                        Receive personalized recommendations for recycling, reusing, or
+                        donating your item, complete with local resources and DIY ideas.
+                    </p>
+                </div>
+                <div class="step-visual">
+                    <div class="options-panel">
+                        <div class="option-button">
+                            <span class="option-icon">♻️</span>
+                            <span>Recycle</span>
+                        </div>
+                        <div class="option-button">
+                            <span class="option-icon">🔄</span>
+                            <span>Reuse</span>
+                        </div>
+                        <div class="option-button">
+                            <span class="option-icon">❤️</span>
+                            <span>Donate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section" id="step3">
+            <div class="step-content">
+                <div class="step-info">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Track Your Impact</h2>
+                    <p class="step-description">
+                        Monitor your environmental contribution with detailed analytics showing
+                        CO2 saved, waste diverted, and community impact.
+                    </p>
+                </div>
+                <div class="step-visual">
+                    <div class="analytics-chart">
+                        <h4 style="margin-bottom: 10px; opacity: 0.9; color: white;">Your Impact</h4>
+                        <div class="chart-bars">
+                            <div class="chart-bar"></div>
+                            <div class="chart-bar"></div>
+                            <div class="chart-bar"></div>
+                            <div class="chart-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="page4"></div>
+    <div class="page5"></div>
+
+
+    <script>
+        // Check if page3 is in viewport
+        function isPage3InView() {
+            const page3 = document.querySelector('.page3');
+            const rect = page3.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // Check if any part of page3 is visible
+            return rect.top < windowHeight && rect.bottom > 0;
+        }
+
+        // Update vertical progress - only works within page3
+        function updateVerticalProgress() {
+            const page3 = document.querySelector('.page3');
+            const sections = document.querySelectorAll('.step-section');
+            const progressFill = document.getElementById('verticalProgressFill');
+            const progressSteps = document.querySelectorAll('.progress-step');
+
+            // Check if we're in page3
+            if (!isPage3InView()) {
+                // Hide progress bar and reset progress when not in page3
+                document.body.classList.remove('page3-active');
+                progressFill.style.height = '0%';
+                progressSteps.forEach(step => {
+                    step.classList.remove('active', 'completed');
+                });
+                return;
+            }
+            function isPage3InView() {
+                const page3 = document.querySelector('.page3');
+                const rect = page3.getBoundingClientRect();
+                return rect.top <= 0 && rect.bottom > 0;
+            }
+            document.body.classList.add('page3-active');
+            const page3Rect = page3.getBoundingClientRect();
+            const page3Height = page3.scrollHeight;
+            const windowHeight = window.innerHeight;
+            let scrollIntoPage3 = 0;
+            if (page3Rect.top <= 1) {
+                scrollIntoPage3 = Math.abs(page3Rect.top);
+            }
+            const maxScrollInPage3 = page3Height - windowHeight;
+            const scrollPercentage = Math.min((scrollIntoPage3 / maxScrollInPage3) * 100, 100);
+
+            progressFill.style.height = Math.max(0, scrollPercentage) + '%';
+
+            let activeStep = 1;
+
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                if (rect.top <= windowHeight * 0.5 && rect.bottom >= windowHeight * 0.5) {
+                    activeStep = index + 1;
+                }
+            });
+            progressSteps.forEach((step, index) => {
+                const stepNumber = index + 1;
+
+                step.classList.remove('active', 'completed');
+
+                if (stepNumber === activeStep) {
+                    step.classList.add('active');
+                } else if (stepNumber < activeStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            updateVerticalProgress();
+        });
+
+        let ticking = false;
+
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateVerticalProgress);
+                ticking = true;
+                setTimeout(() => ticking = false, 16); // ~60fps
+            }
+        }
+
+        window.addEventListener('scroll', requestTick);
+
+        document.querySelectorAll('.progress-step').forEach((step, index) => {
+            step.addEventListener('click', function () {
+                if (isPage3InView()) {
+                    const targetSection = document.getElementById(`step${index + 1}`);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.progress-step').forEach(step => {
+            step.addEventListener('mouseenter', function () {
+                if (isPage3InView() && !this.classList.contains('active')) {
+                    this.style.transform = this.style.transform.replace('scale(1)', 'scale(1.05)') || 'translateX(-50%) scale(1.05)';
+                    this.style.borderColor = 'rgba(16, 185, 129, 0.6)';
+                }
+            });
+
+            step.addEventListener('mouseleave', function () {
+                if (!this.classList.contains('active')) {
+                    this.style.transform = this.style.transform.replace('scale(1.05)', 'scale(1)') || 'translateX(-50%) scale(1)';
+                    this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }
+            });
+        });
+    </script>
+
+
+
+
 </body>
+
 </html>
