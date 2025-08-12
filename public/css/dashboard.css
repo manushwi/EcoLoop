@@ -18,7 +18,7 @@ html,body {
 
 /* Background image + blur */
 body{
-  background: url('/EcoLoop/public/images/bg_image.jpg') center center/cover no-repeat fixed;
+  background: url('/public/images/bg_image.jpg') center center/cover no-repeat fixed;
   position:relative;
   min-height:100vh;
 }

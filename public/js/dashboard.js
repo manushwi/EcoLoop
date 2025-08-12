@@ -24,8 +24,4 @@
       setTimeout(()=> el.style.width = w, 120);
     });
   });
-
-  // scan action (hook)
-  const scan = document.querySelector('.btn-scan');
-  if(scan) scan.addEventListener('click', ()=> alert('Open scanner (plug your scanner flow)'));
 })();
