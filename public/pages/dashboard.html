@@ -1,11 +1,139 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>EcoLoop — Glass Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Link to external CSS -->
+<link rel="stylesheet" href="/EcoLoop/public/css/dashboard.css" />
+=======
     <meta charset="UTF-8">
     <meta name="viewport" content="width= , initial-scale=1.0">
     <title>dashboard</title>
+
 </head>
 <body>
-    
+  <div class="wrap">
+
+    <!-- Header -->
+    <header class="topbar">
+      <div class="left">
+        <button class="btn-back" onclick="history.back()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="title-wrap">
+          <div class="title">Your Impact Dashboard</div>
+          <div class="subtitle">EcoLoop · Track your circular actions</div>
+        </div>
+      </div>
+
+      <button class="btn-scan">Scan New Item</button>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-items">(No. of item rescued)</div>
+        <div class="stat-label">Items Rescued</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-co2">(wgt. of carbon saved)</div>
+        <div class="stat-label">CO₂ Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-chal">(no.of challenges done)</div>
+        <div class="stat-label">Challenges</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-rank">(#user rank)</div>
+        <div class="stat-label">Community Rank</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-streak">#</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="challenges">Challenges</button>
+      <button class="tab" data-tab="badges">Badges</button>
+      <button class="tab" data-tab="history">History</button>
+    </div>
+
+    <!-- Overview -->
+    <section id="overview" class="panel" role="tabpanel">
+      <div class="carbon-row">
+        <div class="carbon-left">
+          <div class="carbon-value" id="carbon-value">(wgt. of carbon saved)</div>
+          <div class="carbon-sub">Your environmental contribution</div>
+
+          <div class="progress" aria-hidden="true"><i id="carbon-fill" style="width: 0%;"></i></div>
+          <div style="margin-top:8px;color:var(--muted)">Goal: (wgt. of carbon saved)  — <strong style="color:#fff">(wgt. of carbon saved) / (wgt. of carbon goal )</strong></div>
+        </div>
+
+        <div class="carbon-right">
+          <div style="font-weight:800; font-size:18px;">(carbon %)</div>
+          <div style="font-size:13px;color:var(--muted); margin-top:6px;">of monthly goal</div>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Recent Activity</div>
+        <div style="color:var(--muted); font-size:13px;">Your latest circular actions</div>
+      </div>
+
+      <div class="activity-list">
+        <!-- Example activities commented out, add your data here -->
+      </div>
+    </section>
+
+    <!-- Challenges -->
+    <section id="challenges" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Challenges</div>
+        <div style="color:var(--muted)">Active & upcoming</div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="challenge-row">
+        <!-- Add challenges here -->
+      </div>
+    </section>
+
+    <!-- Badges -->
+    <section id="badges" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Achievement Badges</div>
+        <div style="color:var(--muted)">Unlock by completing actions</div>
+      </div>
+
+      <div class="badges">
+        <!-- Add badges here -->
+      </div>
+    </section>
+
+    <!-- History -->
+    <section id="history" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Action History</div>
+        <div style="color:var(--muted)">Complete log of circular actions</div>
+      </div>
+
+      <!-- Add history items here -->
+    </section>
+
+  </div>
+
+  <!-- Link to external JS -->
+  <script src="/EcoLoop/public/js/dashboard.js"></script>
 </body>
 </html>
