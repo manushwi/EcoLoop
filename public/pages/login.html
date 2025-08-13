@@ -5,40 +5,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/public/css/auth.css">
+    <link rel="stylesheet" href="../css/auth.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
 </head>
 
 <body>
     <div class="wrapper">
-        <form action="">
+        <form id="loginForm">
             <h1 class="login-title">Login</h1>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
+            
             <div class="input-box">
-                <input class="form-input" type="text" placeholder="Username " required>
-                <i class='bx  bxs-user'></i>
+                <input class="form-input" type="email" name="email" placeholder="Email" required>
+                <i class='bx bxs-user'></i>
             </div>
 
             <div class="input-box">
-                <input class="form-input" type="password" placeholder="password" required>
-              <i class='bx  bxs-eye' ></i> 
+                <input class="form-input" type="password" name="password" id="loginPassword" placeholder="Password" required>
+                <i class='bx bx-eye' id="toggleLoginPassword"></i>
             </div>
 
             <div class="remember-forget">
-                <label for=""> <input type="checkbox">Remember Me</label>
-                
-                <a href="#">forget password?</a>
+                <label for="rememberMe">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">Remember Me
+                </label>
+                <a href="#" id="forgotPassword">Forgot password?</a>
             </div>
 
-            <button class="btn" type="submit">Login</button>
-             <button class="btn"><img width="20" height="20" id="google"src="https://img.icons8.com/fluency/48/google-logo.png" alt="google-logo"/>Continue with Google</button>
+            <button class="btn" type="submit" id="loginBtn">Login</button>
+
+            <button class="btn" type="button" id="googleLoginBtn">
+                <img width="20" height="20" id="google" src="https://img.icons8.com/fluency/48/google-logo.png" alt="google-logo" />
+                Continue with Google
+            </button>
+            
             <div class="register">
-                <p>Don't have acccount <a href="#">Register</a></p>
+                <p>Don't have an account? <a href="signup.html">Register</a></p>
             </div>
         </form>
-
-
     </div>
-</body>
 
+    <script>
+        // Password visibility toggle
+        const passwordInput = document.getElementById('loginPassword');
+        const toggleIcon = document.getElementById('toggleLoginPassword');
+        
+        toggleIcon.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bx-eye');
+                toggleIcon.classList.add('bx-hide');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bx-hide');
+                toggleIcon.classList.add('bx-eye');
+            }
+        });
+
+        // Show/hide messages
+        function showMessage(elementId, message, isError = true) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Disable submit button
+            const submitBtn = document.getElementById('loginBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('success-message', 'Login successful! Redirecting...', false);
+                    
+                    // Redirect after 1 second
+                    setTimeout(() => {
+                        window.location.href = result.redirect || '/dashboard';
+                    }, 1000);
+                } else {
+                    showMessage('error-message', result.message || 'Login failed!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error-message', 'Network error. Please try again.');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        });
+
+        // Handle Google login
+        document.getElementById('googleLoginBtn').addEventListener('click', function() {
+            window.location.href = '/api/auth/google';
+        });
+
+        // Handle forgot password (placeholder)
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Password reset functionality will be implemented soon!');
+        });
+
+        // Check if user is already logged in
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/auth/status', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.authenticated) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                console.log('Not authenticated');
+            }
+        }
+
+        // Check auth status on page load
+        checkAuthStatus();
+    </script>
+
+    <style>
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #ffcdd2;
+        }
+
+        .success-message {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .input-box i {
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .remember-forget {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .remember-forget label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remember-forget a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .remember-forget a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</body>
 </html>

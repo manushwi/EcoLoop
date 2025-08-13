@@ -5,117 +5,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="/public/css/auth.css">
+    <link rel="stylesheet" href="../css/auth.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 
 <body>
     <div class="wrapper">
-        <form action="">
+        <form id="signupForm">
             <h1 class="login-title">Register</h1>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
+            
             <div class="input-box">
-                <input class="form-input" type="text" placeholder="Username " required>
-                <i class='bx  bxs-user'></i>
-            </div>
-
-
-            <div class="input-box">
-                <input class="form-input" type="email" placeholder="E-mail" required>
-                <i class='bx  bxs-envelope-open'></i>
-            </div>
-
-
-            <div class="input-box">
-                <input class="form-input" type="password" id="pass" placeholder="password" required>
-                <i class='bx  bx-eye bx-rotate-180' style='fill:#fff' ,visibility="none"></i>
-                <div class="strength-bar">
-                    <div id="strength">
-
-                    </div>
-                    <p id="strength-text" class="strength-text"></p>
-                </div>
+                <input class="form-input" type="text" name="name" placeholder="Full Name" required>
+                <i class='bx bxs-user'></i>
             </div>
 
             <div class="input-box">
-                <input class="form-input" type="password" placeholder="Confirm Password" required>
-                <i class='bx  bx-eye bx-rotate-180' style='color:#fff'></i>
-                <!-- <i class='bx  bxs-lock'  style='color:#333'></i>  -->
+                <input class="form-input" type="email" name="email" placeholder="E-mail" required>
+                <i class='bx bxs-envelope-open'></i>
             </div>
 
-            <div class="remember-forget">
-                <label for=""> <input type="checkbox">I Agree terms & conditions</label>
-
+            <div class="input-box">
+                <input class="form-input" type="password" name="password" id="pass" placeholder="Password" required>
+                <i class='bx bx-eye bx-rotate-180' id="togglePassword1"></i>
             </div>
 
-            <button class="btn" type="submit">Register</button>
-            <button class="btn"><img width="20" height="20" id="google"
-                    src="https://img.icons8.com/fluency/48/google-logo.png" alt="google-logo" />Continue with
-                Google</button>
+            <div class="input-box">
+                <input class="form-input" type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <i class='bx bx-eye bx-rotate-180' id="togglePassword2"></i>
+            </div>
+
+            <button class="btn" type="submit" id="registerBtn">Register</button>
+            
+            <button class="btn" type="button" id="googleSignupBtn">
+                <img width="20" height="20" id="google" src="https://img.icons8.com/fluency/48/google-logo.png" alt="google-logo" />
+                Continue with Google
+            </button>
+            
             <div class="register">
-                <p> Already have any acccount ? <br><a href="#" id="log">Login</a></p>
+                <p> Already have an account? <br><a href="login.html" id="log">Login</a></p>
             </div>
         </form>
-
-
     </div>
 
-
-
-
-</body>
-
-<script>
-    const password = document.getElementById('pass');
-    const strengthBar = document.getElementById('strength');
-    const strengthText = document.getElementById('strength-text');
-
-    password.addEventListener('input', () => {
-        const val = password.value;
-        let strength = 0;
-
-        if (val.match(/[a-z]+/)) strength += 1;
-        if (val.match(/[A-Z]+/)) strength += 1;
-        if (val.match(/[0-9]+/)) strength += 1;
-        if (val.match(/[$@#&!]+/)) strength += 1;
-        if (val.length >= 8) strength += 1;
-
-        switch (strength) {
-            case 0:
-                strengthBar.style.width = '0%';
-                strengthText.textContent = '';
-                break;
-            case 1:
-                strengthBar.style.width = '20%';
-                strengthBar.style.background = 'red';
-                strengthText.textContent = 'Weak';
-                strengthText.style.color = 'red';
-                break;
-            case 2:
-                strengthBar.style.width = '40%';
-                strengthBar.style.background = 'orange';
-                strengthText.textContent = 'Fair';
-                strengthText.style.color = 'orange';
-                break;
-            case 3:
-                strengthBar.style.width = '60%';
-                strengthBar.style.background = 'yellow';
-                strengthText.textContent = 'Good';
-                strengthText.style.color = 'goldenrod';
-                break;
-            case 4:
-                strengthBar.style.width = '80%';
-                strengthBar.style.background = 'blue';
-                strengthText.textContent = 'Strong';
-                strengthText.style.color = 'blue';
-                break;
-            case 5:
-                strengthBar.style.width = '100%';
-                strengthBar.style.background = 'green';
-                strengthText.textContent = 'Very Strong';
-                strengthText.style.color = 'green';
-                break;
+    <script>
+        // Password visibility toggle
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            toggleIcon.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('bx-eye');
+                    toggleIcon.classList.add('bx-hide');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('bx-hide');
+                    toggleIcon.classList.add('bx-eye');
+                }
+            });
         }
-    });
-</script>
 
+        // Initialize password toggles
+        togglePasswordVisibility('pass', 'togglePassword1');
+
+        // Show/hide messages
+        function showMessage(elementId, message, isError = true) {
+            const messageEl = document.getElementById(elementId);
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Client-side validation
+            if (data.password !== data.confirmPassword) {
+                showMessage('error-message', 'Passwords do not match!');
+                return;
+            }
+
+            if (data.password.length < 8) {
+                showMessage('error-message', 'Password must be at least 8 characters long!');
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = document.getElementById('registerBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+            
+            try {
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('success-message', 'Registration successful! Redirecting...', false);
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = result.redirect || '/dashboard';
+                    }, 2000);
+                } else {
+                    showMessage('error-message', result.message || 'Registration failed!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error-message', 'Network error. Please try again.');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register';
+            }
+        });
+
+        // Handle Google signup
+        document.getElementById('googleSignupBtn').addEventListener('click', function() {
+            window.location.href = '/api/auth/google';
+        });
+    </script>
+
+    <style>
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #ffcdd2;
+        }
+
+        .success-message {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .input-box i {
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</body>
 </html>
