@@ -6,38 +6,38 @@ const userController = require('../controllers/userController');
 const { isAuthenticated } = require('../middleware/auth');
 const { sanitizeInput } = require('../middleware/validation');
 
-// Apply auth and sanitization
+// Apply authentication and sanitization to all routes
 router.use(isAuthenticated);
 router.use(sanitizeInput);
 
 /**
- * GET /api/user/me
- * Get current logged-in user profile
+ * GET /api/user/dashboard
+ * Get user dashboard data
  */
-router.get('/me', userController.getUserProfile);
+router.get('/dashboard', userController.getDashboardData);
 
 /**
- * GET /api/user/history
- * Get history of uploaded photos + AI suggestions
+ * GET /api/user/analytics
+ * Get detailed analytics
  */
-router.get('/history', userController.getUserUploadHistory);
+router.get('/analytics', userController.getAnalytics);
 
 /**
- * GET /api/user/stats
- * Get user stats (category count, carbon footprint, etc.)
+ * GET /api/user/profile
+ * Get user profile
  */
-router.get('/stats', userController.getUserStats);
+router.get('/profile', userController.getProfile);
 
 /**
- * PUT /api/user/profile
- * Update user's profile info (name, etc.)
+ * GET /api/user/leaderboard
+ * Get leaderboard data
  */
-router.put('/profile', userController.updateUserProfile);
+router.get('/leaderboard', userController.getLeaderboard);
 
 /**
- * DELETE /api/user/account
- * Delete user account and related uploads
+ * GET /api/user/export
+ * Export user data (GDPR compliance)
  */
-router.delete('/account', userController.deleteUserAccount);
+router.get('/export', userController.exportUserData);
 
 module.exports = router;
