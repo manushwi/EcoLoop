@@ -122,6 +122,11 @@
 
         // Handle Google login
         document.getElementById('googleLoginBtn').addEventListener('click', function() {
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Connecting to Google...';
+            
+            // Redirect to Google OAuth
             window.location.href = '/api/auth/google';
         });
 
@@ -200,6 +205,37 @@
 
         .remember-forget a:hover {
             text-decoration: underline;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+        #googleLoginBtn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            margin-top: 15px;
+        }
+
+        #googleLoginBtn:hover {
+            background-color: #357abd;
+        }
+
+        #googleLoginBtn img {
+            margin-right: 8px;
+            vertical-align: middle;
         }
     </style>
 </body>

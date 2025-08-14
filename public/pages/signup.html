@@ -29,12 +29,12 @@
 
             <div class="input-box">
                 <input class="form-input" type="password" name="password" id="pass" placeholder="Password" required>
-                <i class='bx bx-eye bx-rotate-180' id="togglePassword1"></i>
+                <i class='bx bx-eye' id="togglePassword1"></i>
             </div>
 
             <div class="input-box">
-                <input class="form-input" type="password" name="confirmPassword" placeholder="Confirm Password" required>
-                <i class='bx bx-eye bx-rotate-180' id="togglePassword2"></i>
+                <input class="form-input" type="password" name="confirmPassword" id="confirmPass" placeholder="Confirm Password" required>
+                <i class='bx bx-eye' id="togglePassword2"></i>
             </div>
 
             <button class="btn" type="submit" id="registerBtn">Register</button>
@@ -45,7 +45,7 @@
             </button>
             
             <div class="register">
-                <p> Already have an account? <br><a href="login.html" id="log">Login</a></p>
+                <p>Already have an account? <a href="login.html" id="loginLink">Login</a></p>
             </div>
         </form>
     </div>
@@ -69,8 +69,9 @@
             });
         }
 
-        // Initialize password toggles
+        // Initialize password toggles for both password fields
         togglePasswordVisibility('pass', 'togglePassword1');
+        togglePasswordVisibility('confirmPass', 'togglePassword2');
 
         // Show/hide messages
         function showMessage(elementId, message, isError = true) {
@@ -141,8 +142,38 @@
 
         // Handle Google signup
         document.getElementById('googleSignupBtn').addEventListener('click', function() {
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Connecting to Google...';
+            
+            // Redirect to Google OAuth
             window.location.href = '/api/auth/google';
         });
+
+        // Handle login link click
+        document.getElementById('loginLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+        });
+
+        // Check if user is already logged in
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/auth/status', {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (result.authenticated) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                console.log('Not authenticated');
+            }
+        }
+
+        // Check auth status on page load
+        checkAuthStatus();
     </script>
 
     <style>
@@ -171,6 +202,37 @@
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+        #googleSignupBtn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            margin-top: 15px;
+        }
+
+        #googleSignupBtn:hover {
+            background-color: #357abd;
+        }
+
+        #googleSignupBtn img {
+            margin-right: 8px;
+            vertical-align: middle;
         }
     </style>
 </body>
