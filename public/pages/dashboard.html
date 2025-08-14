@@ -10,12 +10,23 @@
 
 <!-- Link to external CSS -->
 <link rel="stylesheet" href="../css/dashboard.css" />
+<link rel="stylesheet" href="../css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width= , initial-scale=1.0">
     <title>dashboard</title>
 
 </head>
 <body>
+  <!-- Navigation Bar -->
+  <div class="navdiv">
+    <nav>
+      <div class="logo">Ecoloop</div>
+      <div class="nav-links" id="nav-links">
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </nav>
+  </div>
+
   <div class="wrap">
 
     <!-- Header -->
@@ -134,5 +145,84 @@
 
   <!-- Link to external JS -->
   <script src="/public/js/dashboard.js"></script>
+
+  <!-- Logout functionality -->
+  <script>
+    // Check authentication status on page load
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch('/api/auth/status', {
+          credentials: 'include'
+        });
+        const result = await response.json();
+        
+        if (!result.authenticated) {
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        console.log('Auth check failed, redirecting to login');
+        window.location.href = '/login';
+      }
+    }
+
+    // Handle logout
+    async function handleLogout() {
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Redirect to home page after logout
+          window.location.href = '/';
+        } else {
+          console.error('Logout failed:', result.message);
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Even if logout fails, redirect to home page
+        window.location.href = '/';
+      }
+    }
+
+    // Add event listener to logout button
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+    // Check auth status when page loads
+    checkAuthStatus();
+  </script>
+
+  <style>
+    /* Custom styling for logout button */
+    .logout-btn {
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid #1ab653;
+      background: rgba(0, 128, 0, 0.53);
+      color: white;
+      transition: 0.3s ease;
+      font-size: clamp(12px, 2.5vw, 14px);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .logout-btn:hover {
+      background: rgba(8, 174, 66, 0.4);
+    }
+
+    /* Adjust dashboard layout to account for navbar */
+    .wrap {
+      margin-top: 100px;
+    }
+
+    /* Ensure navbar is above other content */
+    .navdiv {
+      z-index: 1000;
+    }
+  </style>
 </body>
 </html>

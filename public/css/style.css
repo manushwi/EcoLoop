@@ -83,6 +83,38 @@ nav {
     background: rgba(8, 174, 66, 0.4);
 }
 
+/* Logout button styling */
+.logout-btn {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #1ab653;
+    background: rgba(0, 128, 0, 0.53);
+    color: white;
+    transition: 0.3s ease;
+    font-size: clamp(12px, 2.5vw, 14px);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.logout-btn:hover {
+    background: rgba(8, 174, 66, 0.4);
+}
+
+/* Avatar styling */
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.avatar:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+}
 .hero {
     position: relative;
     display: flex;

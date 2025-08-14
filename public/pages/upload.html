@@ -6,12 +6,24 @@
     <title>EcoLoop - Upload Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="../js/upload.js"></script>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <div class="navdiv">
+        <nav>
+            <div class="logo">Ecoloop</div>
+            <div class="nav-links" id="nav-links">
+                <a href="/dashboard" id="dashboardLink">Dashboard</a>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </nav>
+    </div>
+
     <div class="headerdiv">
     <header>
-    <a href="#" class="back-btn">← Back</a>
+    <a href="/" class="back-btn" id="backBtn">← Back to Home</a>
   </header>
     </div>
 
@@ -40,4 +52,90 @@
       </div>
     </div>
   </main>
+
+  <!-- Authentication checking -->
+  <script>
+    // Check authentication status on page load
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch('/api/auth/status', {
+          credentials: 'include'
+        });
+        const result = await response.json();
+        
+        if (!result.authenticated) {
+          // User is not authenticated, redirect to login
+          window.location.href = '/login';
+          return;
+        }
+        
+        // User is authenticated, update back button to maintain session
+        const backBtn = document.getElementById('backBtn');
+        if (backBtn) {
+          backBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Navigate back to home page while maintaining authentication
+            window.location.href = '/';
+          });
+        }
+        
+        // Handle logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', handleLogout);
+        }
+        
+      } catch (error) {
+        console.log('Auth check failed, redirecting to login');
+        window.location.href = '/login';
+      }
+    }
+
+    // Handle logout
+    async function handleLogout() {
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Redirect to home page after logout
+          window.location.href = '/';
+        } else {
+          console.error('Logout failed:', result.message);
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Redirect to home page even if logout fails
+        window.location.href = '/';
+      }
+    }
+
+    // Check auth status when page loads
+    checkAuthStatus();
+
+    // Also check auth status when page becomes visible (for back button navigation)
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        checkAuthStatus();
+      }
+    });
+
+    // Check auth status when page gains focus (for back button navigation)
+    window.addEventListener('focus', function() {
+      checkAuthStatus();
+    });
+
+    // Check auth status when page is shown (for browser back/forward)
+    window.addEventListener('pageshow', function(event) {
+      // Check if page is loaded from cache (back/forward navigation)
+      if (event.persisted) {
+        checkAuthStatus();
+      }
+    });
+  </script>
 </body>
+</html>

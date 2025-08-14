@@ -7,9 +7,22 @@ body {
     background-repeat: no-repeat;
            }
 
-.headerdiv{
-    display: flex;
-    justify-content: left;
+/* Adjust layout for navbar */
+body {
+    margin-top: 80px; /* Account for fixed navbar */
+}
+
+.navdiv {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+/* Ensure header is properly positioned */
+.headerdiv {
+    margin-top: 20px;
 }           
 
 header {

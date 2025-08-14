@@ -19,7 +19,10 @@
             <nav>
                 <div class="logo">Ecoloop</div>
                 <div class="nav-links" id="nav-links">
-                    <a href="#">Log in</a>
+                    <a href="/login" id="loginLink">Log in</a>
+                    <a href="/dashboard" id="dashboardLink" style="display: none;">Dashboard</a>
+                    <img id="userAvatar" src="../images/person.png" alt="User Avatar" style="display: none;" class="avatar">
+                    <button id="logoutBtn" class="logout-btn" style="display: none;">Logout</button>
                 </div>
             </nav>
         </div>
@@ -42,8 +45,8 @@
                     </p>
 
                     <div class="links">
-                        <a href="#"> ⌞ ⌝ㅤStart scanning</a>
-                        <b href="#">view dashboard</b>
+                        <a href="/login" id="startScanningLink"> ⌞ ⌝ㅤStart scanning</a>
+                        <a href="/dashboard" id="viewDashboardLink" style="display: none;">view dashboard</a>
                     </div>
                 </div>
 
@@ -508,9 +511,7 @@
             });
         });
     </script>
-
-
-
+    <script src="../js/main.js"></script>
 
 </body>
 
