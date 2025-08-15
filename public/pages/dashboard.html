@@ -196,6 +196,7 @@
             });
         });
 
+ dashboardBackend
         // Enhanced scroll-based active navigation
         const sections = document.querySelectorAll('.section');
         const navItems = document.querySelectorAll('.nav-item');
@@ -224,6 +225,85 @@
 
         sections.forEach(section => {
             observer.observe(section);
+
+    <!-- Overview -->
+    <section id="overview" class="panel" role="tabpanel">
+      <div class="carbon-row">
+        <div class="carbon-left">
+          <div class="carbon-value" id="carbon-value">(wgt. of carbon saved)</div>
+          <div class="carbon-sub">Your environmental contribution</div>
+
+          <div class="progress" aria-hidden="true"><i id="carbon-fill" style="width: 0%;"></i></div>
+          <div style="margin-top:8px;color:var(--muted)">Goal: (wgt. of carbon saved)  — <strong style="color:#fff">(wgt. of carbon saved) / (wgt. of carbon goal )</strong></div>
+        </div>
+
+        <div class="carbon-right">
+          <div style="font-weight:800; font-size:18px;">(carbon %)</div>
+          <div style="font-size:13px;color:var(--muted); margin-top:6px;">of monthly goal</div>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Recent Activity</div>
+        <div style="color:var(--muted); font-size:13px;">Your latest circular actions</div>
+      </div>
+
+      <div class="activity-list">
+        <!-- Example activities commented out, add your data here -->
+      </div>
+    </section>
+
+    <!-- Challenges -->
+    <section id="challenges" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Challenges</div>
+        <div style="color:var(--muted)">Active & upcoming</div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="challenge-row">
+        <!-- Add challenges here -->
+      </div>
+    </section>
+
+    <!-- Badges -->
+    <section id="badges" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Achievement Badges</div>
+        <div style="color:var(--muted)">Unlock by completing actions</div>
+      </div>
+
+      <div class="badges">
+        <!-- Add badges here -->
+      </div>
+    </section>
+
+    <!-- History -->
+    <section id="history" class="panel" role="tabpanel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Action History</div>
+        <div style="color:var(--muted)">Complete log of circular actions</div>
+      </div>
+
+      <!-- Add history items here -->
+    </section>
+
+  </div>
+
+  <!-- Link to external JS -->
+  <script src="../js/dashboard.js"></script>
+
+  <!-- Logout functionality -->
+  <script>
+    // Check authentication status on page load
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch('/api/auth/status', {
+          credentials: 'include'
+ main
         });
 
         // Add stagger animation to cards on page load
