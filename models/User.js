@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema(
       enum: ['local', 'google'],
       required: true
     },
+    trends: [
+      {
+        date: { type: Date, default: Date.now },
+        type: { type: String, enum: ['recycle', 'reuse', 'donate'], required: true },
+        amount: { type: Number, default: 0 }
+      }
+    ],
 
     stats: {
       totalUploads: { type: Number, default: 0 },
@@ -69,6 +76,7 @@ const userSchema = new mongoose.Schema(
       carbonFootprintSaved: { type: Number, default: 0 }
     }
   },
+
   {
     timestamps: true,
     toJSON: {
@@ -155,5 +163,13 @@ userSchema.statics.getGlobalStats = async function () {
 userSchema.virtual('initials').get(function () {
   return this.name.split(' ').map(n => n[0]).join('').toUpperCase();
 });
+
+
+userSchema.methods.getRecentTrends = function () {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  return this.trends.filter(t => t.date >= sevenDaysAgo);
+};
 
 module.exports = mongoose.model('User', userSchema);

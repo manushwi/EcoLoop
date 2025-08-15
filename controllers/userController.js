@@ -2,6 +2,15 @@ const User = require('../models/User');
 const PhotoUpload = require('../models/PhotoUpload');
 
 class UserController {
+  constructor() {
+    // Bind methods to preserve 'this' context
+    this.getDashboardData = this.getDashboardData.bind(this);
+    this.getAnalytics = this.getAnalytics.bind(this);
+    this.getProfile = this.getProfile.bind(this);
+    this.getLeaderboard = this.getLeaderboard.bind(this);
+    this.exportUserData = this.exportUserData.bind(this);
+  }
+  
   // Get user dashboard data
   async getDashboardData(req, res) {
     try {
