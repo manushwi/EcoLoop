@@ -361,4 +361,4 @@ photoUploadSchema.post('save', async function(doc) {
     }
 });
 
-module.export = mongoose.model('PhotoUpload', photoUploadSchema);
+module.exports = mongoose.model('PhotoUpload', photoUploadSchema);

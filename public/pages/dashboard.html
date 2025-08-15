@@ -1,80 +1,230 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>EcoLoop — Glass Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EcoLoop — Glass Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Link to external CSS -->
-<link rel="stylesheet" href="../css/dashboard.css" />
-<link rel="stylesheet" href="../css/style.css" />
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width= , initial-scale=1.0">
     <title>dashboard</title>
 
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-  <!-- Navigation Bar -->
-  <div class="navdiv">
-    <nav>
-      <div class="logo">Ecoloop</div>
-      <div class="nav-links" id="nav-links">
-        <button id="logoutBtn" class="logout-btn">Logout</button>
-      </div>
-    </nav>
-  </div>
+    <div class="background-glass"></div>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo-section">
+                <div class="logo">EcoLoop</div>
+                <div class="logo-subtitle">Sustainable Future</div>
+            </div>
+            <div class="nav-container">
+                
+                <a href="#leaderboard" class="nav-item">
+                    <span class="nav-item-icon">🏆</span>
+                    Leaderboard
+                </a>
+                <a href="#badges" class="nav-item">
+                    <span class="nav-item-icon">🎖️</span>
+                    Badges
+                </a>
+                <a href="#history" class="nav-item">
+                    <span class="nav-item-icon">📝</span>
+                    History
+                </a>
+            </div>
+        </nav>
 
-  <div class="wrap">
+        <main class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <h1>Dashboard</h1>
+                    <div class="header-subtitle">Welcome back, track your eco-impact</div>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-status" id="userStatus">Loading...</div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            </div>
 
-    <!-- Header -->
-    <header class="topbar">
-      <div class="left">
-        <button class="btn-back" onclick="history.back()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="title-wrap">
-          <div class="title">Your Impact Dashboard</div>
-          <div class="subtitle">EcoLoop · Track your circular actions</div>
-        </div>
-      </div>
+            <div class="content-area">
+                <section id="dashboard" class="section">
+                    <div class="glass-panel">
+                        <h2 class="section-title">Weekly Overview</h2>
 
-      <button class="btn-scan">Scan New Item</button>
-    </header>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value" id="totalRecycled">--</div>
+                                <div class="metric-label">Total Recycled This Week</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="totalCarbonSaved">--</div>
+                                <div class="metric-label">Total Carbon Saved</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="weeklyProgress">--</div>
+                                <div class="metric-label">Weekly Goal Progress</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-num" id="stat-items">(No. of item rescued)</div>
-        <div class="stat-label">Items Rescued</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-co2">(wgt. of carbon saved)</div>
-        <div class="stat-label">CO₂ Saved</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-chal">(no.of challenges done)</div>
-        <div class="stat-label">Challenges</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-rank">(#user rank)</div>
-        <div class="stat-label">Community Rank</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-streak">#</div>
-        <div class="stat-label">Day Streak</div>
-      </div>
+                        <div class="dashboard-grid">
+                            <div class="chart-container">
+                                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 700;">Weekly Recycling Trends</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="weeklyTrendsChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+
+                            <div id="leaderboard" class="leaderboard-container">
+                                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 700;">Community Leaders</h3>
+                                <div class="leaderboard" id="leaderboardList">
+                                    <div class="leaderboard-item">
+                                        <span class="leaderboard-rank">--</span>
+                                        <span class="leaderboard-name">Loading...</span>
+                                        <span class="leaderboard-score">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Charts Section -->
+                        <div class="charts-section">
+                            <h3 style="color: #fff; margin: 30px 0 20px 0; font-weight: 700;">Detailed Analytics</h3>
+                            
+                            <div class="charts-grid">
+                                <div class="chart-card">
+                                    <h4 style="color: #fff; margin-bottom: 15px; font-weight: 600;">Category Distribution</h4>
+                                    <div class="chart-wrapper">
+                                        <canvas id="categoryChart" width="300" height="200"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="chart-card">
+                                    <h4 style="color: #fff; margin-bottom: 15px; font-weight: 600;">Action Types</h4>
+                                    <div class="chart-wrapper">
+                                        <canvas id="actionChart" width="300" height="200"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="chart-card">
+                                    <h4 style="color: #fff; margin-bottom: 15px; font-weight: 600;">Carbon Impact Over Time</h4>
+                                    <div class="chart-wrapper">
+                                        <canvas id="carbonChart" width="300" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section id="badges" class="section">
+                    <div class="glass-panel">
+                        <h2 class="section-title">Your Badges</h2>
+
+                        <div class="badges-grid" id="badgesGrid">
+                            <div class="badge-card">
+                                <div class="badge-icon">🌱</div>
+                                <div class="badge-title">Loading...</div>
+                                <div class="badge-description">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="history" class="section">
+                    <div class="glass-panel">
+                        <h2 class="section-title">Recent Activity</h2>
+
+                        <div class="history-container" id="historyContainer">
+                            <div class="history-item">
+                                <div class="history-icon">📝</div>
+                                <div class="history-details">
+                                    <div class="history-title">Loading recent activity...</div>
+                                    <div class="history-subtitle">Please wait while we fetch your data</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="overview">Overview</button>
-      <button class="tab" data-tab="challenges">Challenges</button>
-      <button class="tab" data-tab="badges">Badges</button>
-      <button class="tab" data-tab="history">History</button>
-    </div>
+    <script>
+        // Smooth scrolling for navigation with proper header offset
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+                // Add active class to clicked item
+                item.classList.add('active');
+
+                // Get the target section
+                const targetId = item.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const targetPosition = targetSection.offsetTop - headerHeight - 20;
+                    
+                    document.querySelector('.content-area').scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+ dashboardBackend
+        // Enhanced scroll-based active navigation
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentArea = document.querySelector('.content-area');
+        const header = document.querySelector('.header');
+
+        const observerOptions = {
+            root: contentArea,
+            rootMargin: `-${header.offsetHeight + 20}px 0px -60% 0px`,
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id;
+                    navItems.forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('href') === `#${sectionId}`) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
 
     <!-- Overview -->
     <section id="overview" class="panel" role="tabpanel">
@@ -153,76 +303,91 @@
       try {
         const response = await fetch('/api/auth/status', {
           credentials: 'include'
+ main
         });
-        const result = await response.json();
-        
-        if (!result.authenticated) {
-          window.location.href = '/login';
-        }
-      } catch (error) {
-        console.log('Auth check failed, redirecting to login');
-        window.location.href = '/login';
-      }
-    }
 
-    // Handle logout
-    async function handleLogout() {
-      try {
-        const response = await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include'
+        // Add stagger animation to cards on page load
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.metric-card, .badge-card, .history-item');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
         });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          // Redirect to home page after logout
-          window.location.href = '/';
-        } else {
-          console.error('Logout failed:', result.message);
-        }
-      } catch (error) {
-        console.error('Logout error:', error);
-        // Even if logout fails, redirect to home page
-        window.location.href = '/';
-      }
-    }
 
-    // Add event listener to logout button
-    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        // Progress bar animation
+        const progressBars = document.querySelectorAll('.progress-fill');
+        const animateProgressBars = () => {
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        };
 
-    // Check auth status when page loads
-    checkAuthStatus();
-  </script>
+        // Trigger progress bar animation when in view
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateProgressBars();
+                }
+            });
+        }, { threshold: 0.5 });
 
-  <style>
-    /* Custom styling for logout button */
-    .logout-btn {
-      text-decoration: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      border: 1px solid #1ab653;
-      background: rgba(0, 128, 0, 0.53);
-      color: white;
-      transition: 0.3s ease;
-      font-size: clamp(12px, 2.5vw, 14px);
-      cursor: pointer;
-      font-family: inherit;
-    }
+        progressBars.forEach(bar => {
+            progressObserver.observe(bar.closest('.metric-card'));
+        });
 
-    .logout-btn:hover {
-      background: rgba(8, 174, 66, 0.4);
-    }
+        // Add floating particle effect
+        const createParticle = () => {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: rgba(74, 222, 128, 0.6);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1;
+                left: ${Math.random() * window.innerWidth}px;
+                top: ${window.innerHeight + 10}px;
+                animation: floatUp 8s linear forwards;
+            `;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        };
 
-    /* Adjust dashboard layout to account for navbar */
-    .wrap {
-      margin-top: 100px;
-    }
+        // Add CSS for particle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                to {
+                    transform: translateY(-${window.innerHeight + 100}px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
 
-    /* Ensure navbar is above other content */
-    .navdiv {
-      z-index: 1000;
-    }
-  </style>
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+    </script>
+
+    <!-- Link to external JS -->
+    <script src="../js/dashboard.js"></script>
+
 </body>
+
 </html>
