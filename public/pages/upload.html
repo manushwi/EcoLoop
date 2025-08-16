@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoLoop - Upload Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/upload.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="../js/upload.js"></script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <div class="navdiv">
-        <nav>
-            <div class="logo">Ecoloop</div>
-            <div class="nav-links" id="nav-links">
-                <a href="/dashboard" id="dashboardLink">Dashboard</a>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
-            </div>
-        </nav>
-    </div>
 
-    <div class="headerdiv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoLoop - Upload Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/upload.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/upload.js"></script>
+</head>
+
+<body>
+
+  <div class="headerdiv">
     <header>
-    <a href="/" class="back-btn" id="backBtn">← Back to Home</a>
-  </header>
-    </div>
+      <a href="/" class="back-btn" id="backBtn">← Back to Home</a>
+    </header>
+  </div>
 
   <main>
     <div class="scanner-card">
       <h2>Scan Your Item</h2>
+      
       <p>Take a photo or upload an image of the item you want to dispose of</p>
 
       <div class="camera-box">
@@ -38,8 +31,8 @@
       </div>
 
       <div class="button-group">
-            <a href="#">⛶ ㅤTake photo</a>
-            <b href="#">🔗ㅤupload Image</b>
+        <a href="#">⛶ ㅤTake photo</a>
+        <b href="#">🔗ㅤupload Image</b>
       </div>
       <div class="tips">
         <h3>⌞ ⌝ㅤScanning Tips</h3>
@@ -62,29 +55,29 @@
           credentials: 'include'
         });
         const result = await response.json();
-        
+
         if (!result.authenticated) {
-          // User is not authenticated, redirect to login
+          //   User is not authenticated, redirect to login
           window.location.href = '/login';
           return;
         }
-        
+
         // User is authenticated, update back button to maintain session
         const backBtn = document.getElementById('backBtn');
         if (backBtn) {
-          backBtn.addEventListener('click', function(e) {
+          backBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            // Navigate back to home page while maintaining authentication
+            //     // Navigate back to home page while maintaining authentication
             window.location.href = '/';
           });
         }
-        
+
         // Handle logout button
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
           logoutBtn.addEventListener('click', handleLogout);
         }
-        
+
       } catch (error) {
         console.log('Auth check failed, redirecting to login');
         window.location.href = '/login';
@@ -98,9 +91,9 @@
           method: 'POST',
           credentials: 'include'
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
           // Redirect to home page after logout
           window.location.href = '/';
@@ -118,24 +111,26 @@
     checkAuthStatus();
 
     // Also check auth status when page becomes visible (for back button navigation)
-    document.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', function () {
       if (!document.hidden) {
         checkAuthStatus();
       }
     });
 
     // Check auth status when page gains focus (for back button navigation)
-    window.addEventListener('focus', function() {
+    window.addEventListener('focus', function () {
       checkAuthStatus();
     });
 
     // Check auth status when page is shown (for browser back/forward)
-    window.addEventListener('pageshow', function(event) {
+    window.addEventListener('pageshow', function (event) {
       // Check if page is loaded from cache (back/forward navigation)
       if (event.persisted) {
         checkAuthStatus();
       }
     });
+
   </script>
 </body>
+
 </html>
