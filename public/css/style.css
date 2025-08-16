@@ -82,7 +82,17 @@ nav {
 .nav-links a:hover {
     background: rgba(8, 174, 66, 0.4);
 }
+#dashboardLink{
+    color: white;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 0;
 
+}
+#dashboardLink:hover{
+    transition: 2s;
+    text-decoration: underline;
+}
 /* Logout button styling */
 .logout-btn {
     text-decoration: none;

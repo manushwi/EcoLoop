@@ -27,8 +27,8 @@ body {
 
 header {
     margin-left: 20px;
-    width:auto;
     margin-top: 2%;
+    width: 11rem;
     display: flex;
     padding: 8px 20px;
     background: rgba(255, 255, 255, 0.1);

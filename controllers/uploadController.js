@@ -18,6 +18,7 @@ class UploadController {
       const userId = req.user._id;
       const fileInfo = getFileInfo(req.file);
 
+      console.log("File info:", fileInfo);
       // Create photo upload record
       const photoUpload = new PhotoUpload({
         user: userId,
@@ -25,7 +26,7 @@ class UploadController {
         originalName: fileInfo.originalName,
         filePath: fileInfo.filePath,
         fileSize: fileInfo.fileSize,
-        mimeType: fileInfo.mimeType,
+        mimeType: fileInfo.mimetype,
         aiAnalysis: {
           status: 'pending'
         },
