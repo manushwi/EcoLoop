@@ -1,95 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recycle Right - Modern Recycling Guide</title>
-<link rel="stylesheet" href="/public/css/result.css">
-  </head>
-  <body>
-    <div class="container">
-      <!-- Header -->
-      <header class="header">
-        <h1>Recycle</h1>
-      </header>
 
-      <!-- Steps Section -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recycle Right - Modern Recycling Guide</title>
+  <link rel="stylesheet" href="../css/result.css">
+  <script defer src="../js/result.js"></script>
+</head>
+
+<body>
+  <a href="/upload" class="back-button">← Back to Upload</a>
+  <div class="container">
+    <header class="header">
+      <h1 id="resultItemTitle">Recycle</h1>
+    </header>
+    <main class="main-content">
       <section class="steps-section">
-        <h2 class="section-title">Steps</h2>
-        <div class="steps-grid">
-          <div class="step-item">
-            <div class="step-number">1</div>
-            <div class="step-text">Search or scan your item</div>
-          </div>
-          <div class="step-item">
-            <div class="step-number">2</div>
-            <div class="step-text">View local recycling instructions</div>
-          </div>
-          <div class="step-item">
-            <div class="step-number">3</div>
-            <div class="step-text">Follow tips for correct sorting</div>
-          </div>
-        </div>
+        <div id="resultContent"></div>
       </section>
+    </main>
+  </div>
+</body>
 
-      <!-- Common Items & Guidelines -->
-      <section class="common-items-section">
-        <h2 class="section-title">Common Items & Guidelines</h2>
-        <div class="items-grid">
-          <div class="item-card">
-            <div class="item-header">
-              <div class="item-icon">🔋</div>
-              <div class="item-title">Batteries</div>
-            </div>
-            <div class="item-description">
-              Dispose of at designated bins in electronics stores
-            </div>
-            <div class="item-guideline">
-              Drop off at designated bins in electronics stores
-            </div>
-          </div>
-
-          <div class="item-card">
-            <div class="item-header">
-              <div class="item-icon">🛍️</div>
-              <div class="item-title">Plastic bags</div>
-            </div>
-            <div class="item-description">
-              Not curbside recyclable; return to store collection points
-            </div>
-            <div class="item-guideline">
-              Not curbside recyclable; store to store collection points
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Reminders section -->
-      <section class="reminders-section">
-        <h2 class="section-title">Reminders</h2>
-        <div class="reminder-items">
-          <div class="reminder-item">
-            <div class="reminder-icon">✨</div>
-            <div class="reminder-text">Clean and dry items</div>
-          </div>
-          <div class="reminder-item">
-            <div class="reminder-icon">📋</div>
-            <div class="reminder-text">Sort by material type</div>
-          </div>
-          <div class="reminder-item">
-            <div class="reminder-icon">🚫</div>
-            <div class="reminder-text">Don't bag recyclables</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer class="footer">
-        <p>🌱 Together, we can make a difference</p>
-        <p>Join millions of people recycling responsibly worldwide</p>
-        <a href="#" class="cta-button">Start Recycling Smart Today</a>
-      </footer>
-    </div>
-  </body>
 </html>

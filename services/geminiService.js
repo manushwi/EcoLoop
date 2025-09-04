@@ -2,25 +2,51 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
-class OllamaService {
+class GeminiService {
     constructor() {
-        this.baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
-        this.model = process.env.OLLAMA_MODEL || 'minicpm-v';
+        this.apiKey = process.env.OPENROUTER_API_KEY;
+        if (!this.apiKey) {
+            throw new Error(
+                'OPENROUTER_API_KEY environment variable is required'
+            );
+        }
+
+        this.baseUrl = 'https://openrouter.ai/api/v1/chat/completions';
+        this.model = 'google/gemini-2.0-flash-exp:free';
         this.timeout = 120000; // 2 minutes timeout
     }
 
-    // Check if Ollama server is running
+    // Check if OpenRouter API is accessible
     async checkHealth() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/tags`, {
-                timeout: 5000,
-            });
+            // Simple test to check if API key is valid
+            const response = await axios.post(
+                this.baseUrl,
+                {
+                    model: 'google/gemini-pro:free',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: 'Hello, this is a health check.',
+                        },
+                    ],
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${this.apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    timeout: 10000,
+                }
+            );
+
             return {
                 isHealthy: true,
-                models: response.data.models || [],
+                message: 'OpenRouter API is accessible',
+                model: this.model,
             };
         } catch (error) {
-            console.error('❌ Ollama health check failed:', error.message);
+            console.error('❌ OpenRouter health check failed:', error.message);
             return {
                 isHealthy: false,
                 error: error.message,
@@ -32,13 +58,14 @@ class OllamaService {
     async imageToBase64(imagePath) {
         try {
             const imageBuffer = await fs.promises.readFile(imagePath);
-            return imageBuffer.toString('base64');
+            const mimeType = this.getMimeType(imagePath);
+            return `data:${mimeType};base64,${imageBuffer.toString('base64')}`;
         } catch (error) {
             throw new Error(`Failed to read image file: ${error.message}`);
         }
     }
 
-    // Analyze image with AI
+    // Analyze image with OpenRouter Gemini AI
     async analyzeImage(imagePath, originalName = '') {
         const startTime = Date.now();
 
@@ -51,45 +78,61 @@ class OllamaService {
             // Convert image to base64
             const base64Image = await this.imageToBase64(imagePath);
 
-            // Prepare the prompt for sustainability analysis
-            const prompt = `Analyze this image for sustainability purposes. Identify the main item(s) in the image and provide detailed recommendations for:
+            // Prepare the comprehensive prompt for sustainability analysis
+            const prompt = `Identify the item in this image and give me a comprehensive, full-page explanation about how it can be managed in sustainable ways. 
 
-1. RECYCLING: Can this item be recycled? Where and how?
-2. REUSING: Creative ways to reuse this item instead of throwing it away
-3. DONATING: Is this item suitable for donation? Where?
+Your response must include three separate sections:  
+
+1. *Recycle* – Explain in detail how the item can be recycled, including the materials it is made of, preparation steps before recycling, and the recycling process step-by-step. Mention if specialized recycling centers are needed.  
+
+2. *Reuse* – Provide multiple creative and practical ways the item can be reused at home, school, or workplace. Explain each idea in full detail with steps on how to implement them.  
+
+3. *Donate* – Suggest how and where the item can be donated, what organizations might accept it, and why donation is valuable. Provide practical guidance for preparing the item before donating.  
 
 Also estimate:
 - Carbon footprint if thrown away (in kg CO2)
 - Environmental impact
 - Item category (plastic, metal, paper, glass, electronic, textile, organic, other)
 
-Please respond in a structured format with clear sections for each recommendation type.
+Make sure the final response is long, thorough, and at least one full page of explanation, with detailed steps, clear formatting, and easy-to-follow instructions.
 
 Image filename: ${originalName}`;
 
-            // Make request to Ollama
-            const response = await axios.post(
-                `${this.baseUrl}/api/generate`,
-                {
-                    model: this.model,
-                    prompt: prompt,
-                    images: [base64Image],
-                    stream: false,
-                    options: {
-                        temperature: 0.1, // Lower temperature for more consistent results
-                        top_p: 0.9,
-                        top_k: 40,
+            // Prepare request data for OpenRouter
+            const requestData = {
+                model: this.model,
+                messages: [
+                    {
+                        role: 'user',
+                        content: [
+                            {
+                                type: 'text',
+                                text: prompt,
+                            },
+                            {
+                                type: 'image_url',
+                                image_url: {
+                                    url: base64Image,
+                                },
+                            },
+                        ],
                     },
-                },
-                {
-                    timeout: this.timeout,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
+                ],
+                max_tokens: 4000,
+                temperature: 0.1,
+            };
 
-            const aiResponse = response.data.response;
+            // Make request to OpenRouter
+            const response = await axios.post(this.baseUrl, requestData, {
+                headers: {
+                    Authorization: `Bearer ${this.apiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                timeout: this.timeout,
+            });
+
+            const aiResponse =
+                response.data.choices?.[0]?.message?.content || '';
             const processingTime = Date.now() - startTime;
 
             // Parse the AI response
@@ -97,11 +140,16 @@ Image filename: ${originalName}`;
             analysis.processingTime = processingTime;
             analysis.confidence = this.calculateConfidence(aiResponse);
 
-            console.log(`🤖 AI Analysis completed in ${processingTime}ms`);
+            console.log(
+                `🤖 OpenRouter Gemini AI Analysis completed in ${processingTime}ms`
+            );
             return analysis;
         } catch (error) {
             const processingTime = Date.now() - startTime;
-            console.error('❌ AI Analysis failed:', error.message);
+            console.error(
+                '❌ OpenRouter Gemini AI Analysis failed:',
+                error.message
+            );
 
             return {
                 status: 'failed',
@@ -114,6 +162,20 @@ Image filename: ${originalName}`;
                 environmental: this.getDefaultEnvironmentalData(),
             };
         }
+    }
+
+    // Get MIME type from file extension
+    getMimeType(filePath) {
+        const ext = path.extname(filePath).toLowerCase();
+        const mimeTypes = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp',
+            '.bmp': 'image/bmp',
+        };
+        return mimeTypes[ext] || 'image/jpeg';
     }
 
     // Parse AI response into structured data
@@ -161,7 +223,8 @@ Image filename: ${originalName}`;
                 analysis.recommendations.recycle = {
                     possible:
                         recyclingInfo.includes('yes') ||
-                        recyclingInfo.includes('can be recycled'),
+                        recyclingInfo.includes('can be recycled') ||
+                        recyclingInfo.includes('recyclable'),
                     instructions: recyclingInfo,
                     locations: this.extractLocations(recyclingInfo),
                 };
@@ -464,23 +527,19 @@ Image filename: ${originalName}`;
 
     // Test the service
     async testService() {
-        console.log('🧪 Testing Ollama service...');
+        console.log('🧪 Testing OpenRouter Gemini service...');
 
         const health = await this.checkHealth();
         if (!health.isHealthy) {
-            console.error('❌ Ollama service is not healthy');
+            console.error('❌ OpenRouter Gemini service is not healthy');
             return false;
         }
 
-        console.log('✅ Ollama service is healthy');
-        console.log(
-            `📋 Available models: ${health.models
-                .map((m) => m.name)
-                .join(', ')}`
-        );
+        console.log('✅ OpenRouter Gemini service is healthy');
+        console.log(`📋 Model: ${health.model}`);
 
         return true;
     }
 }
 
-module.exports = new OllamaService();
+module.exports = new GeminiService();

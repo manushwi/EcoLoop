@@ -102,6 +102,25 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/user', userRoutes);
 app.use('/', pageRoutes);
 
+// Test Gemini service health
+app.get('/api/test-gemini', async (req, res) => {
+  try {
+    const geminiService = require('./services/geminiService');
+    const health = await geminiService.checkHealth();
+    res.json({
+      success: true,
+      data: health
+    });
+  } catch (error) {
+    console.error('Gemini service test error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Gemini service test failed',
+      error: error.message
+    });
+  }
+});
+
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -167,5 +186,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🌍 Ecoloop server running on port ${PORT}`);
   console.log(`📱 Access the app at: http://localhost:${PORT}`);
-  console.log(`🤖 Make sure Ollama server is running with minicpm-v model`);
+  console.log(`🤖 OpenRouter Gemini AI service is ready for image analysis`);
+  console.log(`🔑 Make sure to set OPENROUTER_API_KEY environment variable`);
 });
