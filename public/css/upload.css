@@ -1,11 +1,40 @@
 body {
     margin: 0;
-    height: 100vh;
-    background-image: url("../images/background.jpeg");
+    background-image: url('../images/background.jpeg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-           }
+    overflow-x: hidden;
+}
+
+/* Background particles animation */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(31, 212, 97, 0.3);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.8;
+    }
+}
 
 /* Adjust layout for navbar */
 body {
@@ -23,12 +52,12 @@ body {
 /* Ensure header is properly positioned */
 .headerdiv {
     margin-top: 20px;
-}           
+}
 
 header {
     margin-left: 20px;
-    width:auto;
     margin-top: 2%;
+    width: 11rem;
     display: flex;
     padding: 8px 20px;
     background: rgba(255, 255, 255, 0.1);
@@ -36,121 +65,114 @@ header {
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    border: 2px solid rgba(255,255,255,.2);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .back-btn {
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .logo {
-  color: #0a9f3d;
-  margin: 0;
+    color: #0a9f3d;
+    margin: 0;
 }
 
 main {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
 }
 
 .scanner-card {
-  padding: 20px;
-  width: 400px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 1000;
-  border-radius: 12px;
-  border: 2px solid rgba(255,255,255,.2);
-  color: white;
+    padding: 20px;
+    width: 400px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
 }
-.scanner-card h2{
-
-color: #1fd461;
-font-size: 2.2rem;
+.scanner-card h2 {
+    color: #1fd461;
+    font-size: 2.2rem;
 }
 
 .camera-box {
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  padding: 40px 0;
-  margin: 20px 0;
-  color: #888;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  
-
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px 0;
+    margin: 20px 0;
+    color: #888;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
-.camera-icon{
-    font-size: 2.0rem;
+.camera-icon {
+    font-size: 2rem;
 }
-
 
 .button-group {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-  
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 .button-group a {
-        text-decoration: none;
-        padding: 16px 30px;
-        background: rgba(0, 128, 0, 0.485);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        border: 2px solid rgba(255,255,255,.2);
-        color: white;
-        box-shadow:0 0 10px rgba(0, 128, 0, 0.314), 0 0 20px rgba(0, 128, 0, 0.314);
-        transform: scale(1.03);
-
-    
-    }
+    text-decoration: none;
+    padding: 16px 30px;
+    background: rgba(0, 128, 0, 0.485);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.314), 0 0 20px rgba(0, 128, 0, 0.314);
+    transform: scale(1.03);
+}
 .button-group b {
-        text-decoration: none;
-        padding: 16px 30px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        border: 2px solid rgba(255,255,255,.2);
-        color: white;
-        box-shadow:0 0 10px rgba(0, 128, 0, 0.314), 0 0 20px rgba(0, 128, 0, 0.314);
-        transform: scale(1.03);
-     }
+    text-decoration: none;
+    padding: 16px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.314), 0 0 20px rgba(0, 128, 0, 0.314);
+    transform: scale(1.03);
+}
 
 .button-group a:hover {
-        background: rgba(255, 255, 255, 0.4);
-    }
+    background: rgba(255, 255, 255, 0.4);
+}
 .button-group b:hover {
-        background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .tips {
-  padding: 8px 15px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  transition: 0.3s ease;
-  text-align: left;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: 0.3s ease;
+    text-align: left;
 }
 
 .tips h3 {
-  font-size: 1.2rem;
-  margin-top: 0;
-  color: #1ab653;
+    font-size: 1.2rem;
+    margin-top: 0;
+    color: #1ab653;
 }
 
 .tips ul {
-  margin: 0;
-  padding-left: 20px;
+    margin: 0;
+    padding-left: 20px;
 }
 
 .tips li {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }

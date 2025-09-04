@@ -1,71 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ecoloop - Reuse</title>
-    <link rel="stylesheet" href="/public/css/result.css">
+    <link rel="stylesheet" href="../css/result.css">
+    <script defer src="/js/result.js"></script>
 </head>
+
 <body>
+    <a href="/upload" class="back-button">← Back to Upload</a>
     <div class="container">
-
         <main class="main-content">
-            <nav class="breadcrumb">
-                <div class="breadcrumb-icon">↻</div>
-                <span>Circular Living Made Simple</span>
-            </nav>
-
-            <h1 class="page-title">Reuse</h1>
-            <p class="page-subtitle">Give Your Items a New Life</p>
-            
-            <p class="description">
-                Don't throw it away—repurpose it! Explore simple, creative ways to reuse items at home. 
-                Transform everyday objects into something useful and reduce your environmental impact.
-            </p>
-
-            <section>
-                <h2 class="section-title">
-                    <span><img src="/public/images/idea.png" alt=""></span>
-                    Popular DIY Ideas
-                </h2>
-                <div class="diy-grid">
-                    <div class="diy-item">
-                        <span class="diy-icon"><img src="/public/images/laundry.png" alt=""></span>
-                        <div class="diy-label">Old<br>T-Shirts</div>
-                    </div>
-                    <div class="diy-item">
-                        <span class="diy-icon"><img src="/public/images/water-bottle.png" alt=""></span>
-                        <div class="diy-label">Plastic<br>Bottles</div>
-                    </div>
-                    <div class="diy-item">
-                        <span class="diy-icon"><img src="/public/images/package.png" alt=""></span>
-                        <div class="diy-label">Cardboard<br>Boxes</div>
-                    </div>
-                    <div class="diy-item">
-                        <span class="diy-icon"><img src="/public/images/glass-jar.png" alt=""></span>
-                        <div class="diy-label">Glass<br>Jars</div>
-                    </div>
-                </div>
+            <h1 id="resultItemTitle" class="page-title">Reuse</h1>
+            <section class="steps-section">
+                <div id="resultContent"></div>
             </section>
-
-            <section>
-                <h2 class="section-title">
-                    <span>📋</span>
-                    Categories
-                </h2>
-                <div class="categories-grid">
-                    <div class="category-item">Clothes</div>
-                    <div class="category-item">Electronics</div>
-                    <div class="category-item">Plastic & Glass</div>
-                    <div class="category-item">Furniture</div>
-                </div>
-            </section>
-
-            <button class="add-idea-btn">
-                <span style="font-size: 20px;">+</span>
-                Add Your Own DIY Idea
-            </button>
         </main>
     </div>
 </body>
+
 </html>
