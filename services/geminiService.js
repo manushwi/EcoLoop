@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const Bottleneck = require('bottleneck');
 
 class GeminiService {
     constructor() {
@@ -14,6 +15,33 @@ class GeminiService {
         this.baseUrl = 'https://openrouter.ai/api/v1/chat/completions';
         this.model = 'google/gemini-2.0-flash-exp:free';
         this.timeout = 120000; // 2 minutes timeout
+
+        this.limiter = new Bottleneck({
+    minTime: 150,        // 150ms gap → ~6-7 requests/sec
+    maxConcurrent: 3,    // 3 requests at once
+    reservoir: 100,      // optional: 100 requests available in total
+    reservoirRefreshAmount: 100,
+    reservoirRefreshInterval: 60 * 1000 // refill every 60s
+});
+    }
+
+    async requestWithRetry(requestFn, retries = 5, delay = 2000) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                return await requestFn();
+            } catch (err) {
+                if (err.response && err.response.status === 429) {
+                    console.warn(
+                        `⚠️ Rate limit hit, retrying in ${delay}ms...`
+                    );
+                    await new Promise((res) => setTimeout(res, delay));
+                    delay *= 2; // exponential backoff
+                } else {
+                    throw err; // non-429 error, rethrow
+                }
+            }
+        }
+        throw new Error('Too many retries, still hitting rate limits.');
     }
 
     // Check if OpenRouter API is accessible
@@ -123,13 +151,17 @@ Image filename: ${originalName}`;
             };
 
             // Make request to OpenRouter
-            const response = await axios.post(this.baseUrl, requestData, {
-                headers: {
-                    Authorization: `Bearer ${this.apiKey}`,
-                    'Content-Type': 'application/json',
-                },
-                timeout: this.timeout,
-            });
+            const response = await this.requestWithRetry(() =>
+                this.limiter.schedule(() =>
+                    axios.post(this.baseUrl, requestData, {
+                        headers: {
+                            Authorization: `Bearer ${this.apiKey}`,
+                            'Content-Type': 'application/json',
+                        },
+                        timeout: this.timeout,
+                    })
+                )
+            );
 
             const aiResponse =
                 response.data.choices?.[0]?.message?.content || '';

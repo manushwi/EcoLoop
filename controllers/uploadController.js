@@ -1,7 +1,6 @@
 const PhotoUpload = require('../models/PhotoUpload');
 const User = require('../models/User');
 const geminiService = require('../services/geminiService');
-const ollamaService = require('../services/ollamaService');
 const { getFileInfo, deleteFile } = require('../config/multer');
 const path = require('path');
 
