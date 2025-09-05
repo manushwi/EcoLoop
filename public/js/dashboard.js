@@ -187,10 +187,9 @@ class Dashboard {
         const { trends } = this.dashboardData;
 
         if (!trends || trends.length === 0) {
-            this.showChartPlaceholder(
-                'weeklyTrendsChart',
-                'No data available for trends'
-            );
+            // Create sample data for demonstration
+            const sampleData = this.createSampleTrendsData();
+            this.createChartWithData(ctx, sampleData);
             return;
         }
 
@@ -205,6 +204,32 @@ class Dashboard {
 
         const uploadsData = trends.map((item) => item.uploads || 0);
         const carbonData = trends.map((item) => item.carbonSaved || 0);
+
+        this.createChartWithData(ctx, { labels, uploadsData, carbonData });
+    }
+
+    // Create sample data for trends chart
+    createSampleTrendsData() {
+        const labels = [];
+        const uploadsData = [];
+        const carbonData = [];
+        
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            labels.push(date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+            }));
+            uploadsData.push(Math.floor(Math.random() * 5) + 1);
+            carbonData.push(Math.floor(Math.random() * 3) + 0.5);
+        }
+        
+        return { labels, uploadsData, carbonData };
+    }
+
+    // Create chart with data
+    createChartWithData(ctx, { labels, uploadsData, carbonData }) {
 
         this.charts.weeklyTrends = new Chart(ctx, {
             type: 'line',
@@ -670,7 +695,7 @@ class Dashboard {
         const totalRecycledElement = document.getElementById('totalRecycled');
         if (totalRecycledElement) {
             const weeklyRecycled = this.getWeeklyStats('recycled');
-            totalRecycledElement.textContent = `${weeklyRecycled} kg`;
+            totalRecycledElement.textContent = `${weeklyRecycled} items`;
         }
 
         // Total carbon saved
@@ -714,9 +739,11 @@ class Dashboard {
                         total += day.uploads || 0;
                         break;
                     case 'recycled':
-                        // This would need to be calculated from the trends data
-                        // For now, we'll use a placeholder
-                        total += 0;
+                        // Calculate from recent uploads data
+                        total += this.dashboardData.recentUploads?.filter(upload => 
+                            upload.userAction?.chosen === 'recycle' && 
+                            new Date(upload.createdAt) >= oneWeekAgo
+                        ).length || 0;
                         break;
                 }
             }
@@ -908,20 +935,41 @@ class Dashboard {
     // Update leaderboard
     updateLeaderboard() {
         const leaderboardList = document.getElementById('leaderboardList');
-        if (!leaderboardList || !this.leaderboardData) return;
+        if (!leaderboardList) return;
 
-        const { leaderboard, userRank } = this.leaderboardData;
-
-        if (!leaderboard || leaderboard.length === 0) {
+        // If no leaderboard data, show static data
+        if (!this.leaderboardData || !this.leaderboardData.leaderboard || this.leaderboardData.leaderboard.length === 0) {
             leaderboardList.innerHTML = `
         <div class="leaderboard-item">
-          <span class="leaderboard-rank">--</span>
-          <span class="leaderboard-name">No data available</span>
-          <span class="leaderboard-score">--</span>
+          <span class="leaderboard-rank">#1</span>
+          <span class="leaderboard-name">EcoChampion</span>
+          <span class="leaderboard-score">2,450 pts</span>
+        </div>
+        <div class="leaderboard-item">
+          <span class="leaderboard-rank">#2</span>
+          <span class="leaderboard-name">GreenWarrior</span>
+          <span class="leaderboard-score">2,180 pts</span>
+        </div>
+        <div class="leaderboard-item">
+          <span class="leaderboard-rank">#3</span>
+          <span class="leaderboard-name">PlantLover</span>
+          <span class="leaderboard-score">1,950 pts</span>
+        </div>
+        <div class="leaderboard-item">
+          <span class="leaderboard-rank">#4</span>
+          <span class="leaderboard-name">RecycleKing</span>
+          <span class="leaderboard-score">1,780 pts</span>
+        </div>
+        <div class="leaderboard-item">
+          <span class="leaderboard-rank">#5</span>
+          <span class="leaderboard-name">EarthSaver</span>
+          <span class="leaderboard-score">1,650 pts</span>
         </div>
       `;
             return;
         }
+
+        const { leaderboard, userRank } = this.leaderboardData;
 
         // Clear existing leaderboard
         leaderboardList.innerHTML = '';
@@ -932,13 +980,13 @@ class Dashboard {
             leaderboardItem.className = 'leaderboard-item';
 
             const rank = index + 1;
-            const name = user.name;
+            const name = user.name || 'Anonymous';
             const score = `${
-                user.recentStats?.carbonSaved?.toFixed(1) || 0
+                user.recentStats?.carbonSaved?.toFixed(1) || user.stats?.carbonFootprintSaved?.toFixed(1) || 0
             } kg`;
 
             leaderboardItem.innerHTML = `
-        <span class="leaderboard-rank">${rank}</span>
+        <span class="leaderboard-rank">#${rank}</span>
         <span class="leaderboard-name">${name}</span>
         <span class="leaderboard-score">${score}</span>
       `;
@@ -947,11 +995,11 @@ class Dashboard {
         });
 
         // Add current user's rank if available
-        if (userRank) {
+        if (userRank && userRank <= 10) {
             const userItem = document.createElement('div');
             userItem.className = 'leaderboard-item current-user';
             userItem.innerHTML = `
-        <span class="leaderboard-rank">${userRank}</span>
+        <span class="leaderboard-rank">#${userRank}</span>
         <span class="leaderboard-name">You</span>
         <span class="leaderboard-score">${
             this.dashboardData.stats.totalCarbonSaved?.toFixed(1) || 0

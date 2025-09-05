@@ -27,7 +27,7 @@ body::before {
     margin: 12px 0 0 12px;
     padding: 10px 14px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.036);
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: #fff;
     text-decoration: none;
@@ -63,7 +63,7 @@ body {
 
 /* Header */
 .header {
-    background: #ffffff1c;
+    background: #ffffff09;
     color: #fff;
     border-radius: 24px;
     margin-bottom: 2rem;
@@ -118,7 +118,7 @@ body {
 
 /* Steps Section */
 .steps-section {
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     border-radius: 20px;
@@ -142,7 +142,7 @@ body {
 }
 
 .step-item {
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     padding: 1.5rem;
@@ -181,7 +181,7 @@ body {
 
 /* Common Items Section */
 .common-items-section {
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     border-radius: 20px;
@@ -270,7 +270,7 @@ body {
 
 /* Reminders section */
 .reminders-section {
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     border-radius: 20px;
@@ -315,7 +315,7 @@ body {
 
 /* Footer */
 .footer {
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     border-radius: 20px;
@@ -452,7 +452,7 @@ body {
 .main-content {
     backdrop-filter: blur(5px);
     border-radius: 30px;
-    background: #ffffff1c;
+    background: #ffffff00;
     border: 0.5px solid #fff;
     color: #fff;
     padding: 50px;

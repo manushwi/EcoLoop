@@ -19,6 +19,7 @@ const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
 const userRoutes = require('./routes/user');
 const pageRoutes = require('./routes/pages');
+const placesRoutes = require('./routes/places');
 
 const app = express();
 
@@ -100,6 +101,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/places', placesRoutes);
 app.use('/', pageRoutes);
 
 // Test Gemini service health

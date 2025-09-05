@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Dashboard Test</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        async function testDashboard() {
+            const results = document.getElementById('test-results');
+            
+            try {
+                // Test dashboard API
+                const dashboardResponse = await fetch('/api/user/dashboard', {
+                    credentials: 'include'
+                });
+                
+                results.innerHTML += `<p>Dashboard API Status: ${dashboardResponse.status}</p>`;
+                
+                if (dashboardResponse.status === 302 || dashboardResponse.status === 200) {
+                    results.innerHTML += `<p>✅ Dashboard API is working (redirects to login when not authenticated)</p>`;
+                } else {
+                    results.innerHTML += `<p>❌ Dashboard API error: ${dashboardResponse.status}</p>`;
+                }
+                
+                // Test leaderboard API
+                const leaderboardResponse = await fetch('/api/user/leaderboard', {
+                    credentials: 'include'
+                });
+                
+                results.innerHTML += `<p>Leaderboard API Status: ${leaderboardResponse.status}</p>`;
+                
+                if (leaderboardResponse.status === 302 || leaderboardResponse.status === 200) {
+                    results.innerHTML += `<p>✅ Leaderboard API is working (redirects to login when not authenticated)</p>`;
+                } else {
+                    results.innerHTML += `<p>❌ Leaderboard API error: ${leaderboardResponse.status}</p>`;
+                }
+                
+                // Test Chart.js
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Test'],
+                        datasets: [{
+                            label: 'Test',
+                            data: [1]
+                        }]
+                    }
+                });
+                
+                results.innerHTML += `<p>✅ Chart.js is working</p>`;
+                
+            } catch (error) {
+                results.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Run tests when page loads
+        window.addEventListener('load', testDashboard);
+    </script>
+</body>
+</html>
