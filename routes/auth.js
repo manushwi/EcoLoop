@@ -13,7 +13,8 @@ const {
 const { 
   isAuthenticated, 
   isNotAuthenticated, 
-  logAuthEvent 
+  logAuthEvent, 
+  authRateLimit 
 } = require('../middleware/auth');
 
 // Apply sanitization to all routes
@@ -30,6 +31,7 @@ router.post('/signup',
 // POST /api/auth/login - User login
 router.post('/login', 
   isNotAuthenticated,
+  authRateLimit,
   validateLogin,
   logAuthEvent('login_attempt'),
   authController.login

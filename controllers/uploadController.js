@@ -3,6 +3,14 @@ const User = require('../models/User');
 const geminiService = require('../services/geminiService');
 const { getFileInfo, deleteFile } = require('../config/multer');
 const path = require('path');
+let ollamaService;
+try {
+    // Optional local fallback; proceed without if not present
+    // eslint-disable-next-line global-require, import/no-unresolved
+    ollamaService = require('../services/ollamaService');
+} catch (_) {
+    ollamaService = null;
+}
 
 class UploadController {
     // Handle image upload
@@ -112,10 +120,34 @@ class UploadController {
                             '❌ Retry also failed:',
                             retryError.message
                         );
-                        console.warn(
-                            '➡️ Falling back to local ollamaService for analysis'
-                        );
+                        if (ollamaService && typeof ollamaService.analyzeImage === 'function') {
+                            console.warn(
+                                '➡️ Falling back to local ollamaService for analysis'
+                            );
+                            try {
+                                analysisResult = await ollamaService.analyzeImage(
+                                    imagePath,
+                                    originalName
+                                );
+                            } catch (fallbackError) {
+                                console.error(
+                                    '❌ Ollama fallback failed:',
+                                    fallbackError.message
+                                );
+                                throw fallbackError;
+                            }
+                        } else {
+                            throw retryError;
+                        }
+                    }
+                } else {
+                    console.error('❌ AI Analysis failed:', error.message);
+                    // Try fallback when generic failure occurs
+                    if (ollamaService && typeof ollamaService.analyzeImage === 'function') {
                         try {
+                            console.warn(
+                                '➡️ Attempting ollamaService fallback after failure'
+                            );
                             analysisResult = await ollamaService.analyzeImage(
                                 imagePath,
                                 originalName
@@ -125,26 +157,10 @@ class UploadController {
                                 '❌ Ollama fallback failed:',
                                 fallbackError.message
                             );
-                            throw fallbackError;
+                            throw error; // propagate original error
                         }
-                    }
-                } else {
-                    console.error('❌ AI Analysis failed:', error.message);
-                    // Try fallback when generic failure occurs
-                    try {
-                        console.warn(
-                            '➡️ Attempting ollamaService fallback after failure'
-                        );
-                        analysisResult = await ollamaService.analyzeImage(
-                            imagePath,
-                            originalName
-                        );
-                    } catch (fallbackError) {
-                        console.error(
-                            '❌ Ollama fallback failed:',
-                            fallbackError.message
-                        );
-                        throw error; // propagate original error
+                    } else {
+                        throw error;
                     }
                 }
             }
@@ -164,7 +180,9 @@ class UploadController {
                 },
             });
 
-            console.log(`✅ AI analysis completed for upload ${uploadId}`);
+            console.log(
+                `✅ AI analysis finished for upload ${uploadId} with status: ${analysisResult.status}`
+            );
         } catch (error) {
             console.error(
                 `❌ AI analysis failed for upload ${uploadId}:`,

@@ -106,7 +106,9 @@ const handleAuthError = (err, req, res, next) => {
     });
   }
   
-  req.flash('error', 'Authentication failed. Please try again.');
+  if (typeof req.flash === 'function') {
+    req.flash('error', 'Authentication failed. Please try again.');
+  }
   res.redirect('/login');
 };
 
