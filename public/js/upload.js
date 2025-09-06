@@ -567,14 +567,13 @@ function simulateProgress() {
                 uploadText.textContent = step.text;
             }
             currentStep++;
-            setTimeout(updateProgress, 1000);
+            setTimeout(updateProgress, 6000);
         }
     };
 
     updateProgress();
 }
 
-// Wait for AI analysis to complete with improved rate limiting
 async function waitForAnalysis(uploadId) {
     if (analysisCheckInProgress) {
         console.log('Analysis check already in progress');
@@ -763,10 +762,8 @@ function populateAnalysisResults(analysis) {
 
     if (itemTitle) {
         // Show item name instead of description
-        if (analysis.itemName) {
-            itemTitle.textContent = analysis.itemName;
-        } else if (analysis.itemCategory) {
-            itemTitle.textContent = capitalizeFirst(analysis.itemCategory);
+        if (analysis.itemTitle) {
+            itemTitle.textContent = analysis.itemTitle;
         }
     }
 

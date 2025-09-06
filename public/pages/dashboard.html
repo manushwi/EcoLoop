@@ -1,460 +1,602 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>EcoLoop — Glass Dashboard</title>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>EcoLoop — Glass Dashboard</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <!-- Link to external CSS -->
+        <link rel="stylesheet" href="../css/dashboard.css" />
+        <link rel="stylesheet" href="../css/style.css" />
 
-    <!-- Link to external CSS -->
-    <link rel="stylesheet" href="../css/dashboard.css" />
-    <link rel="stylesheet" href="../css/style.css" />
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+    <body>
+        <div class="background-glass"></div>
 
-<body>
+        <div class="container">
+            <nav class="sidebar">
+                <div class="headerdiv">
+                    <div class="backHeader">
+                        <a href="/" class="back-btn" id="backBtn"
+                            >← Back to Home</a
+                        >
+                    </div>
+                </div>
+                <div class="logo-section">
+                    <div class="logo">EcoLoop</div>
+                    <div class="logo-subtitle">Sustainable Future</div>
+                </div>
+                <div class="nav-container">
+                    <a href="#leaderboardSection" class="nav-item">
+                        <span class="nav-item-icon">🏆</span>
+                        Leaderboard
+                    </a>
+                    <a href="#badges" class="nav-item">
+                        <span class="nav-item-icon">🎖️</span>
+                        Badges
+                    </a>
+                    <a href="#history" class="nav-item">
+                        <span class="nav-item-icon">📝</span>
+                        History
+                    </a>
+                </div>
+            </nav>
 
+            <main class="main-content">
+                <div class="header">
+                    <div class="header-left">
+                        <h1>Dashboard</h1>
+                        <div class="header-subtitle">
+                            Welcome back, track your eco-impact
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <div class="user-name" id="userName">
+                                Loading...
+                            </div>
+                            <div class="user-status" id="userStatus">
+                                Loading...
+                            </div>
+                        </div>
+                        <button class="logout-btn" id="logoutBtn">
+                            Logout
+                        </button>
+                    </div>
+                </div>
 
+                <div class="content-area">
+                    <section id="dashboard" class="section">
+                        <div class="glass-panel">
+                            <h2 class="section-title">Weekly Overview</h2>
 
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div
+                                        class="metric-value"
+                                        id="totalRecycled"
+                                    >
+                                        --
+                                    </div>
+                                    <div class="metric-label">
+                                        Total Recycled This Week
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div
+                                        class="metric-value"
+                                        id="totalCarbonSaved"
+                                    >
+                                        --
+                                    </div>
+                                    <div class="metric-label">
+                                        Total Carbon Saved
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div
+                                        class="metric-value"
+                                        id="weeklyProgress"
+                                    >
+                                        --
+                                    </div>
+                                    <div class="metric-label">
+                                        Weekly Goal Progress
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div
+                                            class="progress-fill"
+                                            id="progressFill"
+                                            style="width: 0%"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
+                    <section id="leaderboardSection" class="section">
+                        <div class="glass-panel">
+                            <h2 class="section-title">Leaderboard</h2>
+                            <div class="dashboard-grid">
+                                <div class="chart-container">
+                                    <h3
+                                        style="
+                                            color: #fff;
+                                            margin-bottom: 20px;
+                                            font-weight: 700;
+                                        "
+                                    >
+                                        Weekly Recycling Trends
+                                    </h3>
+                                    <div class="chart-wrapper">
+                                        <canvas
+                                            id="weeklyTrendsChart"
+                                            width="400"
+                                            height="200"
+                                        ></canvas>
+                                    </div>
+                                </div>
 
-    <div class="background-glass"></div>
-    
-    <div class="container">
+                                <div class="leaderboard-container">
+                                    <h3
+                                        style="
+                                            color: #fff;
+                                            margin-bottom: 20px;
+                                            font-weight: 700;
+                                        "
+                                    >
+                                        Community Leaders
+                                    </h3>
+                                    <div
+                                        class="leaderboard"
+                                        id="leaderboardList"
+                                    >
+                                        <div class="leaderboard-item">
+                                            <span class="leaderboard-rank"
+                                                >#1</span
+                                            >
+                                            <span class="leaderboard-name"
+                                                >EcoChampion</span
+                                            >
+                                            <span class="leaderboard-score"
+                                                >2,450 pts</span
+                                            >
+                                        </div>
+                                        <div class="leaderboard-item">
+                                            <span class="leaderboard-rank"
+                                                >#2</span
+                                            >
+                                            <span class="leaderboard-name"
+                                                >GreenWarrior</span
+                                            >
+                                            <span class="leaderboard-score"
+                                                >2,180 pts</span
+                                            >
+                                        </div>
+                                        <div class="leaderboard-item">
+                                            <span class="leaderboard-rank"
+                                                >#3</span
+                                            >
+                                            <span class="leaderboard-name"
+                                                >PlantLover</span
+                                            >
+                                            <span class="leaderboard-score"
+                                                >1,950 pts</span
+                                            >
+                                        </div>
+                                        <div class="leaderboard-item">
+                                            <span class="leaderboard-rank"
+                                                >#4</span
+                                            >
+                                            <span class="leaderboard-name"
+                                                >RecycleKing</span
+                                            >
+                                            <span class="leaderboard-score"
+                                                >1,780 pts</span
+                                            >
+                                        </div>
+                                        <div class="leaderboard-item">
+                                            <span class="leaderboard-rank"
+                                                >#5</span
+                                            >
+                                            <span class="leaderboard-name"
+                                                >EarthSaver</span
+                                            >
+                                            <span class="leaderboard-score"
+                                                >1,650 pts</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-        <nav class="sidebar">
-            <div class="headerdiv">
-        <div class="backHeader">
-            <a href="/" class="back-btn" id="backBtn">← Back to Home</a>
+                    <section id="badges" class="section">
+                        <div class="glass-panel">
+                            <h2 class="section-title">Your Badges</h2>
+
+                            <div class="badges-grid" id="badgesGrid">
+                                <div class="badge-card">
+                                    <div class="badge-icon">🌱</div>
+                                    <div class="badge-title">Eco Starter</div>
+                                    <div class="badge-description">
+                                        Completed your first recycling action
+                                    </div>
+                                </div>
+                                <div class="badge-card">
+                                    <div class="badge-icon">♻️</div>
+                                    <div class="badge-title">
+                                        Weekly Champion
+                                    </div>
+                                    <div class="badge-description">
+                                        Achieved weekly recycling goal
+                                    </div>
+                                </div>
+                                <div class="badge-card">
+                                    <div class="badge-icon">🏆</div>
+                                    <div class="badge-title">Carbon Saver</div>
+                                    <div class="badge-description">
+                                        Saved 50kg of carbon emissions
+                                    </div>
+                                </div>
+                                <div class="badge-card">
+                                    <div class="badge-icon">🌍</div>
+                                    <div class="badge-title">
+                                        Earth Guardian
+                                    </div>
+                                    <div class="badge-description">
+                                        30 days of consistent recycling
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="history" class="section">
+                        <div class="glass-panel">
+                            <h2 class="section-title">Recent Activity</h2>
+                            <div
+                                class="history-container"
+                                id="historyContainer"
+                            >
+                                <div class="history-item">
+                                    <div class="history-icon">♻️</div>
+                                    <div class="history-details">
+                                        <div class="history-title">
+                                            Recycled 5 plastic bottles
+                                        </div>
+                                        <div class="history-subtitle">
+                                            2 hours ago • +25 points
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-icon">📦</div>
+                                    <div class="history-details">
+                                        <div class="history-title">
+                                            Cardboard recycling
+                                        </div>
+                                        <div class="history-subtitle">
+                                            Yesterday • +15 points
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-icon">🥫</div>
+                                    <div class="history-details">
+                                        <div class="history-title">
+                                            Metal cans recycled
+                                        </div>
+                                        <div class="history-subtitle">
+                                            2 days ago • +20 points
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-icon">🌱</div>
+                                    <div class="history-details">
+                                        <div class="history-title">
+                                            Composted organic waste
+                                        </div>
+                                        <div class="history-subtitle">
+                                            3 days ago • +30 points
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
         </div>
-    </div>
-            <div class="logo-section">
-                <div class="logo">EcoLoop</div>
-                <div class="logo-subtitle">Sustainable Future</div>
-            </div>
-            <div class="nav-container">
-                <a href="#leaderboardSection" class="nav-item">
-                    <span class="nav-item-icon">🏆</span>
-                    Leaderboard
-                </a>
-                <a href="#badges" class="nav-item">
-                    <span class="nav-item-icon">🎖️</span>
-                    Badges
-                </a>
-                <a href="#history" class="nav-item">
-                    <span class="nav-item-icon">📝</span>
-                    History
-                </a>
-            </div>
-        </nav>
 
-        <main class="main-content">
-            <div class="header">
-                <div class="header-left">
-                    <h1>Dashboard</h1>
-                    <div class="header-subtitle">Welcome back, track your eco-impact</div>
-                </div>
-                <div class="header-right">
-                    <div class="user-info">
-                        <div class="user-name" id="userName">Loading...</div>
-                        <div class="user-status" id="userStatus">Loading...</div>
-                    </div>
-                    <button class="logout-btn" id="logoutBtn">Logout</button>
-                </div>
-            </div>
+        <script>
+            // Enhanced back button functionality with authentication check
+            document
+                .getElementById('backBtn')
+                .addEventListener('click', async (e) => {
+                    e.preventDefault();
 
-            <div class="content-area">
-                <section id="dashboard" class="section">
-                    <div class="glass-panel">
-                        <h2 class="section-title">Weekly Overview</h2>
+                    try {
+                        // Check if user is still authenticated before redirecting
+                        const response = await fetch('/api/auth/status', {
+                            credentials: 'include',
+                        });
 
-                        <div class="metrics-grid">
-                            <div class="metric-card">
-                                <div class="metric-value" id="totalRecycled">--</div>
-                                <div class="metric-label">Total Recycled This Week</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-value" id="totalCarbonSaved">--</div>
-                                <div class="metric-label">Total Carbon Saved</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-value" id="weeklyProgress">--</div>
-                                <div class="metric-label">Weekly Goal Progress</div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="leaderboardSection" class="section">
-                    <div class="glass-panel">
-                        <h2 class="section-title">Leaderboard</h2>
-                        <div class="dashboard-grid">
-                            <div class="chart-container">
-                                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 700;">Weekly Recycling
-                                    Trends</h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="weeklyTrendsChart" width="400" height="200"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="leaderboard-container">
-                                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 700;">Community Leaders
-                                </h3>
-                                <div class="leaderboard" id="leaderboardList">
-                                    <div class="leaderboard-item">
-                                        <span class="leaderboard-rank">#1</span>
-                                        <span class="leaderboard-name">EcoChampion</span>
-                                        <span class="leaderboard-score">2,450 pts</span>
-                                    </div>
-                                    <div class="leaderboard-item">
-                                        <span class="leaderboard-rank">#2</span>
-                                        <span class="leaderboard-name">GreenWarrior</span>
-                                        <span class="leaderboard-score">2,180 pts</span>
-                                    </div>
-                                    <div class="leaderboard-item">
-                                        <span class="leaderboard-rank">#3</span>
-                                        <span class="leaderboard-name">PlantLover</span>
-                                        <span class="leaderboard-score">1,950 pts</span>
-                                    </div>
-                                    <div class="leaderboard-item">
-                                        <span class="leaderboard-rank">#4</span>
-                                        <span class="leaderboard-name">RecycleKing</span>
-                                        <span class="leaderboard-score">1,780 pts</span>
-                                    </div>
-                                    <div class="leaderboard-item">
-                                        <span class="leaderboard-rank">#5</span>
-                                        <span class="leaderboard-name">EarthSaver</span>
-                                        <span class="leaderboard-score">1,650 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="badges" class="section">
-                    <div class="glass-panel">
-                        <h2 class="section-title">Your Badges</h2>
-
-                        <div class="badges-grid" id="badgesGrid">
-                            <div class="badge-card">
-                                <div class="badge-icon">🌱</div>
-                                <div class="badge-title">Eco Starter</div>
-                                <div class="badge-description">Completed your first recycling action</div>
-                            </div>
-                            <div class="badge-card">
-                                <div class="badge-icon">♻️</div>
-                                <div class="badge-title">Weekly Champion</div>
-                                <div class="badge-description">Achieved weekly recycling goal</div>
-                            </div>
-                            <div class="badge-card">
-                                <div class="badge-icon">🏆</div>
-                                <div class="badge-title">Carbon Saver</div>
-                                <div class="badge-description">Saved 50kg of carbon emissions</div>
-                            </div>
-                            <div class="badge-card">
-                                <div class="badge-icon">🌍</div>
-                                <div class="badge-title">Earth Guardian</div>
-                                <div class="badge-description">30 days of consistent recycling</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="history" class="section">
-                    <div class="glass-panel">
-                        <h2 class="section-title">Recent Activity</h2>
-                        <div class="history-container" id="historyContainer">
-                            <div class="history-item">
-                                <div class="history-icon">♻️</div>
-                                <div class="history-details">
-                                    <div class="history-title">Recycled 5 plastic bottles</div>
-                                    <div class="history-subtitle">2 hours ago • +25 points</div>
-                                </div>
-                            </div>
-                            <div class="history-item">
-                                <div class="history-icon">📦</div>
-                                <div class="history-details">
-                                    <div class="history-title">Cardboard recycling</div>
-                                    <div class="history-subtitle">Yesterday • +15 points</div>
-                                </div>
-                            </div>
-                            <div class="history-item">
-                                <div class="history-icon">🥫</div>
-                                <div class="history-details">
-                                    <div class="history-title">Metal cans recycled</div>
-                                    <div class="history-subtitle">2 days ago • +20 points</div>
-                                </div>
-                            </div>
-                            <div class="history-item">
-                                <div class="history-icon">🌱</div>
-                                <div class="history-details">
-                                    <div class="history-title">Composted organic waste</div>
-                                    <div class="history-subtitle">3 days ago • +30 points</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        // Enhanced back button functionality with authentication check
-        document.getElementById('backBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
-
-            try {
-                // Check if user is still authenticated before redirecting
-                const response = await fetch('/api/auth/status', {
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.authenticated) {
-                        // User is authenticated, safe to redirect to home
-                        window.location.href = '/';
-                    } else {
-                        // User not authenticated, redirect to login
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.authenticated) {
+                                // User is authenticated, safe to redirect to home
+                                window.location.href = '/';
+                            } else {
+                                // User not authenticated, redirect to login
+                                window.location.href = '/login';
+                            }
+                        } else {
+                            // API call failed, redirect to login to be safe
+                            console.warn(
+                                'Auth status check failed, redirecting to login'
+                            );
+                            window.location.href = '/login';
+                        }
+                    } catch (error) {
+                        console.error('Error checking auth status:', error);
+                        // On error, redirect to login for security
                         window.location.href = '/login';
                     }
-                } else {
-                    // API call failed, redirect to login to be safe
-                    console.warn('Auth status check failed, redirecting to login');
-                    window.location.href = '/login';
+                });
+
+            // Initialize with dashboard active on load
+            document.addEventListener('DOMContentLoaded', async () => {
+                const isAuthenticated = await checkAuthStatus();
+
+                if (isAuthenticated) {
+                    // Set first nav item (leaderboard) as active by default
+                    const firstNavItem = document.querySelector(
+                        '.nav-item[href="#leaderboardSection"]'
+                    );
+                    if (firstNavItem) {
+                        firstNavItem.classList.add('active');
+                    }
                 }
-            } catch (error) {
-                console.error('Error checking auth status:', error);
-                // On error, redirect to login for security
-                window.location.href = '/login';
-            }
-        });
+            });
 
-        // Initialize with dashboard active on load
-        document.addEventListener('DOMContentLoaded', async () => {
-            const isAuthenticated = await checkAuthStatus();
+            // Smooth scrolling for navigation with proper header offset
+            document.querySelectorAll('.nav-item').forEach((item) => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
 
-            if (isAuthenticated) {
-                // Set first nav item (leaderboard) as active by default
-                const firstNavItem = document.querySelector('.nav-item[href="#leaderboardSection"]');
-                if (firstNavItem) {
-                    firstNavItem.classList.add('active');
-                }
-            }
-        });
+                    // Remove active class from all items
+                    document
+                        .querySelectorAll('.nav-item')
+                        .forEach((nav) => nav.classList.remove('active'));
 
-        // Smooth scrolling for navigation with proper header offset
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
+                    // Add active class to clicked item
+                    item.classList.add('active');
 
-                // Remove active class from all items
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    // Get the target section
+                    const targetId = item.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
 
-                // Add active class to clicked item
-                item.classList.add('active');
+                    if (targetSection) {
+                        const headerHeight =
+                            document.querySelector('.header').offsetHeight;
+                        const targetPosition =
+                            targetSection.offsetTop - headerHeight - 20;
 
-                // Get the target section
-                const targetId = item.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
+                        document.querySelector('.content-area').scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth',
+                        });
+                    }
+                });
+            });
 
-                if (targetSection) {
-                    const headerHeight = document.querySelector('.header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight - 20;
+            // Enhanced scroll-based active navigation with better intersection handling
+            const sections = document.querySelectorAll('.section');
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentArea = document.querySelector('.content-area');
+            const header = document.querySelector('.header');
 
-                    document.querySelector('.content-area').scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
+            let isScrolling = false;
+            let scrollTimeout;
+
+            const observerOptions = {
+                root: contentArea,
+                rootMargin: `-${header.offsetHeight + 50}px 0px -50% 0px`,
+                threshold: [0.1, 0.5, 0.9],
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                // Only update if not currently scrolling from navigation click
+                if (isScrolling) return;
+
+                let maxIntersection = 0;
+                let activeSection = null;
+
+                entries.forEach((entry) => {
+                    if (
+                        entry.isIntersecting &&
+                        entry.intersectionRatio > maxIntersection
+                    ) {
+                        maxIntersection = entry.intersectionRatio;
+                        activeSection = entry.target;
+                    }
+                });
+
+                if (activeSection) {
+                    const sectionId = activeSection.id;
+
+                    // Remove active class from all nav items
+                    navItems.forEach((item) => {
+                        item.classList.remove('active');
                     });
+
+                    // Add active class to the corresponding nav item
+                    const activeNavItem = document.querySelector(
+                        `.nav-item[href="#${sectionId}"]`
+                    );
+                    if (activeNavItem) {
+                        activeNavItem.classList.add('active');
+                    }
                 }
-            });
-        });
+            }, observerOptions);
 
-        // Enhanced scroll-based active navigation with better intersection handling
-        const sections = document.querySelectorAll('.section');
-        const navItems = document.querySelectorAll('.nav-item');
-        const contentArea = document.querySelector('.content-area');
-        const header = document.querySelector('.header');
-
-        let isScrolling = false;
-        let scrollTimeout;
-
-        const observerOptions = {
-            root: contentArea,
-            rootMargin: `-${header.offsetHeight + 50}px 0px -50% 0px`,
-            threshold: [0.1, 0.5, 0.9]
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            // Only update if not currently scrolling from navigation click
-            if (isScrolling) return;
-
-            let maxIntersection = 0;
-            let activeSection = null;
-
-            entries.forEach(entry => {
-                if (entry.isIntersecting && entry.intersectionRatio > maxIntersection) {
-                    maxIntersection = entry.intersectionRatio;
-                    activeSection = entry.target;
-                }
+            sections.forEach((section) => {
+                observer.observe(section);
             });
 
-            if (activeSection) {
-                const sectionId = activeSection.id;
-
-                // Remove active class from all nav items
-                navItems.forEach(item => {
-                    item.classList.remove('active');
+            // Track when navigation scrolling is happening
+            document.querySelectorAll('.nav-item').forEach((item) => {
+                item.addEventListener('click', () => {
+                    isScrolling = true;
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000); // Reset after 1 second
                 });
-
-                // Add active class to the corresponding nav item
-                const activeNavItem = document.querySelector(`.nav-item[href="#${sectionId}"]`);
-                if (activeNavItem) {
-                    activeNavItem.classList.add('active');
-                }
-            }
-        }, observerOptions);
-
-        sections.forEach(section => {
-            observer.observe(section);
-        });
-
-        // Track when navigation scrolling is happening
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                isScrolling = true;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    isScrolling = false;
-                }, 1000); // Reset after 1 second
             });
-        });
 
-        // Check authentication status on page load
-        async function checkAuthStatus() {
-            try {
-                const response = await fetch('/api/auth/status', {
-                    credentials: 'include'
-                });
+            // Check authentication status on page load
+            async function checkAuthStatus() {
+                try {
+                    const response = await fetch('/api/auth/status', {
+                        credentials: 'include',
+                    });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.authenticated) {
-                        // Update user info if available
-                        if (data.user) {
-                            document.getElementById('userName').textContent = data.user.name || 'User';
-                            document.getElementById('userStatus').textContent = data.user.status || 'Active Member';
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.authenticated) {
+                            // Update user info if available
+                            if (data.user) {
+                                document.getElementById(
+                                    'userName'
+                                ).textContent = data.user.name || 'User';
+                                document.getElementById(
+                                    'userStatus'
+                                ).textContent =
+                                    data.user.status || 'Active Member';
+                            }
+                            return true;
+                        } else {
+                            // User not authenticated, redirect to login
+                            window.location.href = '/login';
+                            return false;
                         }
-                        return true;
                     } else {
-                        // User not authenticated, redirect to login
+                        // API call failed, redirect to login
                         window.location.href = '/login';
                         return false;
                     }
-                } else {
-                    // API call failed, redirect to login
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    // On error, redirect to login for security
                     window.location.href = '/login';
                     return false;
                 }
-            } catch (error) {
-                console.error('Auth check failed:', error);
-                // On error, redirect to login for security
-                window.location.href = '/login';
-                return false;
             }
-        }
 
-        // Enhanced logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
+            // Enhanced logout functionality
+            document
+                .getElementById('logoutBtn')
+                .addEventListener('click', async (e) => {
+                    e.preventDefault();
 
-            try {
-                const response = await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
+                    try {
+                        const response = await fetch('/api/auth/logout', {
+                            method: 'POST',
+                            credentials: 'include',
+                        });
+
+                        if (response.ok) {
+                            // Successful logout, redirect to login page
+                            window.location.href = '/login';
+                        } else {
+                            // Logout failed, but still redirect for security
+                            console.warn('Logout failed, redirecting anyway');
+                            window.location.href = '/login';
+                        }
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        // On error, still redirect to login
+                        window.location.href = '/login';
+                    }
                 });
 
-                if (response.ok) {
-                    // Successful logout, redirect to login page
-                    window.location.href = '/login';
-                } else {
-                    // Logout failed, but still redirect for security
-                    console.warn('Logout failed, redirecting anyway');
-                    window.location.href = '/login';
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                // On error, still redirect to login
-                window.location.href = '/login';
-            }
-        });
+            // Run auth check on page load
+            document.addEventListener('DOMContentLoaded', async () => {
+                const isAuthenticated = await checkAuthStatus();
 
-        // Run auth check on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            const isAuthenticated = await checkAuthStatus();
-
-            if (isAuthenticated) {
-                // Set first nav item (leaderboard) as active by default
-                const firstNavItem = document.querySelector('.nav-item[href="#leaderboardSection"]');
-                if (firstNavItem) {
-                    firstNavItem.classList.add('active');
-                }
-            }
-        });
-
-        // Add stagger animation to cards on page load
-        window.addEventListener('load', () => {
-            const cards = document.querySelectorAll('.metric-card, .badge-card, .history-item');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        });
-
-        // Progress bar animation
-        const progressBars = document.querySelectorAll('.progress-fill');
-        const animateProgressBars = () => {
-            progressBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 500);
-            });
-        };
-
-        // Trigger progress bar animation when in view
-        const progressObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateProgressBars();
+                if (isAuthenticated) {
+                    // Set first nav item (leaderboard) as active by default
+                    const firstNavItem = document.querySelector(
+                        '.nav-item[href="#leaderboardSection"]'
+                    );
+                    if (firstNavItem) {
+                        firstNavItem.classList.add('active');
+                    }
                 }
             });
-        }, { threshold: 0.5 });
 
-        progressBars.forEach(bar => {
-            progressObserver.observe(bar.closest('.metric-card'));
-        });
+            // Add stagger animation to cards on page load
+            window.addEventListener('load', () => {
+                const cards = document.querySelectorAll(
+                    '.metric-card, .badge-card, .history-item'
+                );
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
 
-        // Add floating particle effect
-        const createParticle = () => {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.6s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            });
+
+            // Progress bar animation
+            const progressBars = document.querySelectorAll('.progress-fill');
+            const animateProgressBars = () => {
+                progressBars.forEach((bar) => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 500);
+                });
+            };
+
+            // Trigger progress bar animation when in view
+            const progressObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            animateProgressBars();
+                        }
+                    });
+                },
+                { threshold: 0.5 }
+            );
+
+            progressBars.forEach((bar) => {
+                progressObserver.observe(bar.closest('.metric-card'));
+            });
+
+            // Add floating particle effect
+            const createParticle = () => {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
                 position: fixed;
                 width: 4px;
                 height: 4px;
@@ -467,32 +609,32 @@
                 animation: floatUp 8s linear forwards;
             `;
 
-            document.body.appendChild(particle);
+                document.body.appendChild(particle);
 
-            setTimeout(() => {
-                particle.remove();
-            }, 8000);
-        };
+                setTimeout(() => {
+                    particle.remove();
+                }, 8000);
+            };
 
-        // Add CSS for particle animation
-        const style = document.createElement('style');
-        style.textContent = `
+            // Add CSS for particle animation
+            const style = document.createElement('style');
+            style.textContent = `
             @keyframes floatUp {
                 to {
-                    transform: translateY(-${window.innerHeight + 100}px) rotate(360deg);
+                    transform: translateY(-${
+                        window.innerHeight + 100
+                    }px) rotate(360deg);
                     opacity: 0;
                 }
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
-        // Create particles periodically
-        setInterval(createParticle, 3000);
-    </script>
+            // Create particles periodically
+            setInterval(createParticle, 3000);
+        </script>
 
-    <!-- Link to external JS -->
-    <script src="../js/dashboard.js"></script>
-
-</body>
-
+        <!-- Link to external JS -->
+        <script src="../js/dashboard.js"></script>
+    </body>
 </html>

@@ -112,9 +112,9 @@ class GeminiService {
 IMPORTANT: You must respond with a valid JSON object in the following exact format. Do not include any text before or after the JSON. Make each section as detailed and extensive as possible:
 
 {
-  "itemName": "Very detailed and specific description of the item with all identifying features",
+  "itemName": "The name of the item in the image",
   "itemCategory": "plastic|metal|paper|glass|electronic|textile|organic|other",
-  "description": "Comprehensive description of the item, its materials, construction, size, condition, and all relevant details",
+  "description": "Very detailed and specific description of the item with all identifying features. Comprehensive description of the item, its materials, construction, size, condition, and all relevant details",
   "confidence": 0.95,
   "recycle": {
     "possible": true,
@@ -432,16 +432,16 @@ Image filename: ${originalName}`;
         const analysis = {
             status: 'completed',
             itemName: 'Unknown Item',
-            description: '',
-            itemCategory: 'other',
-            confidence: 0.8,
-            recommendations: {
-                recycle: {
-                    possible: false,
-                    instructions: '',
+                description: '',
+                itemCategory: 'other',
+                confidence: 0.8,
+                recommendations: {
+                    recycle: {
+                        possible: false,
+                        instructions: '',
                     preparation: '',
                     materials: [],
-                    locations: [],
+                        locations: [],
                     difficulty: 'medium',
                     timeRequired: '',
                     cost: ''
@@ -458,73 +458,73 @@ Image filename: ${originalName}`;
                     taxBenefits: '',
                     impact: ''
                 }
-            },
-            environmental: {
-                carbonFootprint: 0,
-                carbonSaved: 0,
-                wasteReduction: 0,
-                energySaved: 0,
+                },
+                environmental: {
+                    carbonFootprint: 0,
+                    carbonSaved: 0,
+                    wasteReduction: 0,
+                    energySaved: 0,
                 waterSaved: 0,
                 impactDescription: ''
-            },
+                },
             alternatives: [],
             tips: []
-        };
+            };
 
-        // Extract description (first paragraph usually contains item description)
-        const lines = aiResponse.split('\n').filter((line) => line.trim());
-        if (lines.length > 0) {
-            analysis.description = lines[0].replace(/^\d+\.\s*/, '').trim();
-        }
+            // Extract description (first paragraph usually contains item description)
+            const lines = aiResponse.split('\n').filter((line) => line.trim());
+            if (lines.length > 0) {
+                analysis.description = lines[0].replace(/^\d+\.\s*/, '').trim();
+            }
 
-        // Determine item category based on keywords
+            // Determine item category based on keywords
         analysis.itemCategory = this.extractCategory(aiResponse.toLowerCase());
 
-        // Extract recycling information
+            // Extract recycling information
         const recyclingInfo = this.extractSection(aiResponse, ['recycl', 'recyl']);
-        if (recyclingInfo) {
-            analysis.recommendations.recycle = {
+            if (recyclingInfo) {
+                analysis.recommendations.recycle = {
                 possible: recyclingInfo.includes('yes') || 
-                         recyclingInfo.includes('can be recycled') || 
-                         recyclingInfo.includes('recyclable'),
-                instructions: recyclingInfo,
+                        recyclingInfo.includes('can be recycled') ||
+                        recyclingInfo.includes('recyclable'),
+                    instructions: recyclingInfo,
                 preparation: '',
                 materials: [],
-                locations: this.extractLocations(recyclingInfo),
+                    locations: this.extractLocations(recyclingInfo),
                 difficulty: 'medium',
                 timeRequired: '',
                 cost: ''
-            };
-        }
+                };
+            }
 
-        // Extract reuse information
+            // Extract reuse information
         const reuseInfo = this.extractSection(aiResponse, ['reus', 'repurpos']);
-        if (reuseInfo) {
-            analysis.recommendations.reuse = {
+            if (reuseInfo) {
+                analysis.recommendations.reuse = {
                 possible: reuseInfo.length > 50,
-                ideas: this.extractReuseIdeas(reuseInfo),
+                    ideas: this.extractReuseIdeas(reuseInfo),
                 tips: ''
-            };
-        }
+                };
+            }
 
-        // Extract donation information
+            // Extract donation information
         const donationInfo = this.extractSection(aiResponse, ['donat', 'give away', 'charity']);
-        if (donationInfo) {
-            analysis.recommendations.donate = {
+            if (donationInfo) {
+                analysis.recommendations.donate = {
                 possible: donationInfo.includes('yes') || 
-                         donationInfo.includes('suitable') || 
-                         donationInfo.includes('can be donated'),
+                        donationInfo.includes('suitable') ||
+                        donationInfo.includes('can be donated'),
                 organizations: this.extractDonationOrganizations(donationInfo),
                 preparation: '',
                 taxBenefits: '',
                 impact: ''
-            };
-        }
+                };
+            }
 
-        // Extract environmental data
-        analysis.environmental = this.extractEnvironmentalData(aiResponse);
+            // Extract environmental data
+            analysis.environmental = this.extractEnvironmentalData(aiResponse);
 
-        return analysis;
+            return analysis;
     }
 
     // Extract category from AI response
