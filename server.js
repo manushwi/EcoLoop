@@ -1,5 +1,4 @@
 const express = require('express');
-app.set('trust proxy', 1);
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
@@ -23,6 +22,7 @@ const pageRoutes = require('./routes/pages');
 const placesRoutes = require('./routes/places');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // Connect to MongoDB
 connectDB();
