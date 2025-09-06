@@ -267,9 +267,288 @@
         </div>
     </div>
 
+    <div class="page4">
+         <div class="scroll-container" id="scrollContainer">
+    <div class="animation-wrapper">
+      <div class="header" id="header">
+        <h1>
 
-    <div class="page4"></div>
-    <div class="page5"></div>
+          <img src="/assets/arrow (2).png" alt="">
+        </h1>
+        <h1>Scroll Down</h1>
+        <p>For more information on CodeFetch chrome extension scroll down to learn more </p>
+      </div>
+
+      <div class="card-container" id="cardContainer">
+        <div class="card-inner">
+          <div class="demo-content">
+            <div class="video-container">
+                <iframe id="youtubeVideo" src="https://www.youtube.com/embed/8flfpEaSYYM?si=ww3x2fBQhB6S3SLc" frameborder="0" allow="autoplay;encrypted-media;"allowfullscreen></iframe>
+              </iframe>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+   <div class="page5">
+     <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>EcoLoop</h3>
+        <p>
+          Our Chrome Extension makes web inspection easy and beginner-friendly.
+          With one click, you can hover over any element on a live site to see its HTML and CSS, extract images, videos,
+          and SVGs
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a style="cursor: pointer;"
+              onclick="document.getElementById('main').scrollIntoView({ behavior: 'smooth' });">Home</a></li>
+          <li><a style="cursor: pointer;"
+              onclick="document.getElementById('cards').scrollIntoView({ behavior: 'smooth' });">About</a>
+          </li>
+          <li><a style="cursor: pointer;">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact" id="contactUs">
+        <h4>Contact Us</h4>
+        <div class="tooltip-container" id="tooltipContainer">
+          <!-- Tooltips will be dynamically generated -->
+        </div>
+      </div>
+    </div>
+
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 EcoLoop. All rights reserved.</p>
+      <p>made by Manushwi, Anurag, Ankur, Ashish</p>
+    </div>
+  </footer>
+   </div>
+
+    <script>
+    class ContainerScrollAnimation {
+      constructor() {
+        this.scrollContainer = document.getElementById('scrollContainer');
+        this.cardContainer = document.getElementById('cardContainer');
+        this.header = document.getElementById('header');
+        this.scrollProgress = document.getElementById('scrollProgress');
+
+        this.isMobile = window.innerWidth <= 768;
+
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.handleScroll();
+      }
+
+      setupEventListeners() {
+        window.addEventListener('scroll', () => this.handleScroll());
+        window.addEventListener('resize', () => {
+          this.isMobile = window.innerWidth <= 768;
+          this.handleScroll();
+        });
+      }
+
+      handleScroll() {
+        const scrollProgress = this.getScrollProgress();
+        this.updateAnimations(scrollProgress);
+        this.updateScrollIndicator(scrollProgress);
+      }
+
+      getScrollProgress() {
+        const containerRect = this.scrollContainer.getBoundingClientRect();
+        const containerTop = containerRect.top;
+        const containerHeight = containerRect.height;
+        const windowHeight = window.innerHeight;
+
+        // Calculate when container enters and exits viewport
+        const startOffset = windowHeight;
+        const endOffset = windowHeight * 0.000001;
+
+        const totalDistance = startOffset - endOffset;
+        const currentProgress = (startOffset - containerTop) / totalDistance;
+
+        return Math.max(0, Math.min(1, currentProgress));
+      }
+
+      updateAnimations(progress) {
+        // Rotation: starts at 20deg, ends at 0deg
+        const rotation = 80 - (progress * 80);
+
+        // Scale: mobile (0.7 to 0.9), desktop (1.05 to 1.0)
+        const scaleStart = this.isMobile ? 0.7 : 1.05;
+        const scaleEnd = this.isMobile ? 0.9 : 1.0;
+        const scale = scaleStart + (progress * (scaleEnd - scaleStart));
+
+        // Translation: header moves up as we scroll
+        const headerTranslate = progress * -100;
+
+        // Apply transforms
+        this.cardContainer.style.transform = `rotateX(${rotation}deg) scale(${scale})`;
+        this.header.style.transform = `translateY(${headerTranslate}px)`;
+
+        // Optional: Add some opacity fade to header
+        this.header.style.opacity = Math.max(0.3, 1 - (progress * 0.7));
+      }
+
+      updateScrollIndicator(progress) {
+        const height = Math.max(0, Math.min(100, progress * 100));
+        this.scrollProgress.style.height = `${height}%`;
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new ContainerScrollAnimation();
+    });
+
+    // Add some extra scroll smoothness for webkit browsers
+    document.documentElement.style.scrollBehavior = 'smooth';
+  </script>
+
+    <script>
+    // Sample data for tooltips
+    const tooltipData = [
+      {
+        name: "Manushwi Raj",
+        role: "Team Leader",
+        avatar: "/public/images/manushwi.jpg",
+        id: "marcus",
+        link: "https://www.linkedin.com/in/manushwi-raj-bhardwaj/"
+      },
+      {
+        name: "Anurag Singh",
+        role: "Web designer",
+        avatar: "/public/images/anurag.jpg",
+        id: "elena",
+        link: "https://www.linkedin.com/in/anurag-singh-003958353/"
+      },
+      {
+        name: "Ankur Singh",
+        role: "Speaker",
+        avatar: "/public/images/ankur.jpg",
+        id: "david",
+        link: "https://www.linkedin.com/in/ankur-singh-06a95a353/"
+      },
+      {
+        name: "Ashish Pal",
+        role: "UI Developer",
+        avatar: "/public/images/ashish.jpg",
+        id: "priya",
+        link: "https://www.linkedin.com/in/ashish-pal-05710a312/"
+      }
+    ];
+
+    // Generate tooltip HTML
+    function createTooltipHTML(person) {
+      return `
+                <div class="tooltip-item" data-id="${person.id}">
+                    <a href="${person.link}" target="_blank">
+                      <img src="${person.avatar}" class="avatar" alt="${person.name}" loading="lazy">
+                    </a>
+                    
+                    <div class="tooltip">
+                        <div class="tooltip-name">${person.name}</div>
+                        <div class="tooltip-role">${person.role}</div>
+                    </div>
+                </div>
+            `;
+    }
+
+    // Initialize tooltips
+    function initializeTooltips() {
+      const container = document.getElementById('tooltipContainer');
+      const tooltipHTML = tooltipData.map(person => createTooltipHTML(person)).join('');
+      container.innerHTML = tooltipHTML;
+
+      // Add enhanced hover effects
+      const tooltipItems = container.querySelectorAll('.tooltip-item');
+
+      tooltipItems.forEach((item, index) => {
+        // Staggered entrance animation
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.style.animation = 'fadeInUp 0.6s ease-out forwards';
+
+        // Enhanced interaction effects
+        item.addEventListener('mouseenter', function () {
+          // Subtle scale effect on other items
+          tooltipItems.forEach((otherItem, otherIndex) => {
+            if (otherIndex !== index) {
+              otherItem.style.transform = 'scale(0.95)';
+              otherItem.style.opacity = '0.7';
+            }
+          });
+        });
+
+        item.addEventListener('mouseleave', function () {
+          // Reset all items
+          tooltipItems.forEach(otherItem => {
+            otherItem.style.transform = '';
+            otherItem.style.opacity = '';
+          });
+        });
+
+        // Handle image loading errors
+        const img = item.querySelector('.avatar');
+        img.addEventListener('error', function () {
+          this.style.background = `linear-gradient(135deg, 
+                        hsl(${Math.random() * 360}, 70%, 60%) 0%, 
+                        hsl(${Math.random() * 360}, 70%, 50%) 100%)`;
+          this.innerHTML = person.name.charAt(0);
+          this.style.display = 'flex';
+          this.style.alignItems = 'center';
+          this.style.justifyContent = 'center';
+          this.style.fontSize = '1.2rem';
+          this.style.fontWeight = '600';
+          this.style.color = 'white';
+        });
+      });
+    }
+
+    // Advanced tooltip positioning for edge cases
+    function adjustTooltipPosition() {
+      const tooltips = document.querySelectorAll('.tooltip');
+
+      tooltips.forEach(tooltip => {
+        const rect = tooltip.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+
+        // Adjust if tooltip goes off-screen
+        if (rect.left < 10) {
+          tooltip.style.left = '10px';
+          tooltip.style.transform = 'translateX(0)';
+        } else if (rect.right > viewportWidth - 10) {
+          tooltip.style.left = 'auto';
+          tooltip.style.right = '10px';
+          tooltip.style.transform = 'translateX(0)';
+        }
+      });
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeTooltips();
+
+      // Adjust tooltip positions on window resize
+      let resizeTimeout;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(adjustTooltipPosition, 100);
+      });
+    });
+
+  </script>
 
 
     <script>
