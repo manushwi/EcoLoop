@@ -762,9 +762,9 @@ function populateAnalysisResults(analysis) {
     const condition = document.getElementById('condition');
 
     if (itemTitle) {
-        const descriptionTitle = (analysis.description || '').split('\n').filter(Boolean)[0]?.trim();
-        if (descriptionTitle && descriptionTitle.length > 0) {
-            itemTitle.textContent = descriptionTitle;
+        // Show item name instead of description
+        if (analysis.itemName) {
+            itemTitle.textContent = analysis.itemName;
         } else if (analysis.itemCategory) {
             itemTitle.textContent = capitalizeFirst(analysis.itemCategory);
         }

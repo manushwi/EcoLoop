@@ -896,6 +896,10 @@ class Dashboard {
 
     // Get history title
     getHistoryTitle(upload) {
+        // Use itemName if available, otherwise fall back to description
+        if (upload.aiAnalysis?.itemName) {
+            return upload.aiAnalysis.itemName;
+        }
         const description = (upload.aiAnalysis?.description || '')
             .split('\n')
             .filter(Boolean)[0];

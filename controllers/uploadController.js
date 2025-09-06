@@ -169,12 +169,14 @@ class UploadController {
             await PhotoUpload.findByIdAndUpdate(uploadId, {
                 $set: {
                     'aiAnalysis.status': analysisResult.status,
+                    'aiAnalysis.itemName': analysisResult.itemName,
                     'aiAnalysis.description': analysisResult.description,
                     'aiAnalysis.itemCategory': analysisResult.itemCategory,
                     'aiAnalysis.confidence': analysisResult.confidence,
-                    'aiAnalysis.recommendations':
-                        analysisResult.recommendations,
+                    'aiAnalysis.recommendations': analysisResult.recommendations,
                     'aiAnalysis.environmental': analysisResult.environmental,
+                    'aiAnalysis.alternatives': analysisResult.alternatives,
+                    'aiAnalysis.tips': analysisResult.tips,
                     'aiAnalysis.processingTime': analysisResult.processingTime,
                     'aiAnalysis.error': analysisResult.error,
                 },
@@ -440,14 +442,18 @@ class UploadController {
                 data: {
                     uploadId: photoUpload._id,
                     action,
+                    itemName: photoUpload.aiAnalysis.itemName,
                     itemCategory: photoUpload.aiAnalysis.itemCategory,
                     description: photoUpload.aiAnalysis.description,
                     recommendations,
                     environmental,
-                    tips: this.getActionTips(
+                    alternatives: photoUpload.aiAnalysis.alternatives || [],
+                    tips: photoUpload.aiAnalysis.tips || this.getActionTips(
                         action,
                         photoUpload.aiAnalysis.itemCategory
                     ),
+                    confidence: photoUpload.aiAnalysis.confidence,
+                    processingTime: photoUpload.aiAnalysis.processingTime
                 },
             });
         } catch (error) {

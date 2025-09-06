@@ -107,22 +107,159 @@ class GeminiService {
             const base64Image = await this.imageToBase64(imagePath);
 
             // Prepare the comprehensive prompt for sustainability analysis
-            const prompt = `Identify the item in this image and give me a comprehensive, full-page explanation about how it can be managed in sustainable ways. 
+            const prompt = `Identify the item in this image and provide an EXTREMELY DETAILED and COMPREHENSIVE sustainability analysis. Make your response as large and informative as possible.
 
-Your response must include three separate sections:  
+IMPORTANT: You must respond with a valid JSON object in the following exact format. Do not include any text before or after the JSON. Make each section as detailed and extensive as possible:
 
-1. *Recycle* – Explain in detail how the item can be recycled, including the materials it is made of, preparation steps before recycling, and the recycling process step-by-step. Mention if specialized recycling centers are needed.  
+{
+  "itemName": "Very detailed and specific description of the item with all identifying features",
+  "itemCategory": "plastic|metal|paper|glass|electronic|textile|organic|other",
+  "description": "Comprehensive description of the item, its materials, construction, size, condition, and all relevant details",
+  "confidence": 0.95,
+  "recycle": {
+    "possible": true,
+    "instructions": "Extremely detailed step-by-step recycling instructions with multiple methods, safety considerations, and comprehensive guidance",
+    "preparation": "Comprehensive preparation steps including cleaning, disassembly, sorting, and any special requirements",
+    "materials": ["detailed list of all materials and components"],
+    "difficulty": "easy|medium|hard",
+    "timeRequired": "Detailed time estimate with breakdown",
+    "cost": "Cost analysis including any fees or savings",
+    "safetyNotes": "Important safety considerations and precautions",
+    "commonMistakes": "Common mistakes to avoid when recycling this item",
+    "benefits": "Environmental and economic benefits of recycling this item"
+  },
+  "reuse": {
+    "possible": true,
+    "ideas": [
+      {
+        "title": "Creative and Specific Reuse Idea Title",
+        "description": "Very detailed description of the reuse idea with specific applications and use cases",
+        "difficulty": "easy|medium|hard",
+        "timeRequired": "Detailed time estimate for implementation",
+        "materialsNeeded": ["comprehensive list of all materials and tools needed"],
+        "steps": ["Detailed step 1 with specific instructions", "Detailed step 2 with specific instructions", "Detailed step 3 with specific instructions", "Additional steps as needed"],
+        "benefits": "Comprehensive explanation of benefits including environmental, economic, and practical advantages",
+        "variations": "Alternative approaches or variations of this idea",
+        "skillLevel": "Required skill level and experience",
+        "toolsRequired": "Specific tools and equipment needed"
+      },
+      {
+        "title": "Second Creative Reuse Idea",
+        "description": "Another detailed reuse idea with different approach",
+        "difficulty": "easy|medium|hard",
+        "timeRequired": "Time estimate",
+        "materialsNeeded": ["materials list"],
+        "steps": ["step 1", "step 2", "step 3"],
+        "benefits": "Benefits of this approach",
+        "variations": "Alternative approaches",
+        "skillLevel": "Required skills",
+        "toolsRequired": "Tools needed"
+      },
+      {
+        "title": "Third Creative Reuse Idea",
+        "description": "Third detailed reuse idea",
+        "difficulty": "easy|medium|hard",
+        "timeRequired": "Time estimate",
+        "materialsNeeded": ["materials list"],
+        "steps": ["step 1", "step 2", "step 3"],
+        "benefits": "Benefits of this approach",
+        "variations": "Alternative approaches",
+        "skillLevel": "Required skills",
+        "toolsRequired": "Tools needed"
+      }
+    ],
+    "tips": "Comprehensive tips and best practices for reusing this type of item",
+    "creativeInspiration": "Additional creative inspiration and ideas",
+    "upcyclingPotential": "Assessment of upcycling potential and opportunities"
+  },
+  "donate": {
+    "possible": true,
+    "organizations": [
+      {
+        "name": "Specific Organization Name",
+        "description": "Detailed description of what they accept and their mission",
+        "website": "Website URL",
+        "acceptanceCriteria": "Detailed criteria for item condition and acceptance",
+        "preparation": "Specific preparation requirements for this organization",
+        "impact": "Social and environmental impact of donating to this organization",
+        "specializations": "What makes this organization unique or specialized"
+      },
+      {
+        "name": "Second Organization",
+        "description": "Detailed description",
+        "website": "Website URL",
+        "acceptanceCriteria": "Detailed criteria",
+        "preparation": "Preparation requirements",
+        "impact": "Impact description",
+        "specializations": "Specializations"
+      },
+      {
+        "name": "Third Organization",
+        "description": "Detailed description",
+        "website": "Website URL",
+        "acceptanceCriteria": "Detailed criteria",
+        "preparation": "Preparation requirements",
+        "impact": "Impact description",
+        "specializations": "Specializations"
+      }
+    ],
+    "preparation": "Comprehensive preparation guide for donation including cleaning, documentation, and packaging",
+    "taxBenefits": "Detailed tax deduction benefits and documentation requirements",
+    "impact": "Comprehensive explanation of environmental and social impact of donating",
+    "timing": "Best times to donate and seasonal considerations",
+    "documentation": "Required documentation and record-keeping"
+  },
+  "environmental": {
+    "carbonFootprint": 2.5,
+    "carbonSaved": 1.8,
+    "wasteReduction": 0.5,
+    "energySaved": 3.2,
+    "waterSaved": 15.0,
+    "impactDescription": "Very detailed explanation of environmental impact including specific metrics and long-term effects",
+    "decompositionTime": "How long it takes to decompose if not properly disposed",
+    "pollutionPotential": "Potential environmental harm if not disposed properly",
+    "resourceConservation": "Resources saved through proper disposal",
+    "globalImpact": "Global environmental impact and significance"
+  },
+  "alternatives": [
+    {
+      "title": "Comprehensive Alternative Disposal Method",
+      "description": "Detailed description of the alternative method with specific applications",
+      "pros": ["detailed advantage 1", "detailed advantage 2", "detailed advantage 3"],
+      "cons": ["detailed disadvantage 1", "detailed disadvantage 2"],
+      "requirements": "Specific requirements and considerations",
+      "costAnalysis": "Cost comparison and analysis",
+      "environmentalImpact": "Environmental impact of this alternative"
+    },
+    {
+      "title": "Second Alternative Method",
+      "description": "Detailed description",
+      "pros": ["advantage 1", "advantage 2"],
+      "cons": ["disadvantage 1", "disadvantage 2"],
+      "requirements": "Requirements",
+      "costAnalysis": "Cost analysis",
+      "environmentalImpact": "Environmental impact"
+    }
+  ],
+  "tips": [
+    "Comprehensive tip 1 with detailed explanation",
+    "Comprehensive tip 2 with detailed explanation",
+    "Comprehensive tip 3 with detailed explanation",
+    "Comprehensive tip 4 with detailed explanation",
+    "Comprehensive tip 5 with detailed explanation"
+  ],
+  "warnings": [
+    "Important warning 1 with detailed explanation",
+    "Important warning 2 with detailed explanation"
+  ],
+  "funFacts": [
+    "Interesting fact 1 about this item or its disposal",
+    "Interesting fact 2 about sustainability",
+    "Interesting fact 3 about environmental impact"
+  ]
+}
 
-2. *Reuse* – Provide multiple creative and practical ways the item can be reused at home, school, or workplace. Explain each idea in full detail with steps on how to implement them.  
-
-3. *Donate* – Suggest how and where the item can be donated, what organizations might accept it, and why donation is valuable. Provide practical guidance for preparing the item before donating.  
-
-Also estimate:
-- Carbon footprint if thrown away (in kg CO2)
-- Environmental impact
-- Item category (plastic, metal, paper, glass, electronic, textile, organic, other)
-
-Make sure the final response is long, thorough, and at least one full page of explanation, with detailed steps, clear formatting, and easy-to-follow instructions.
+Make sure to provide extremely detailed, comprehensive, and helpful information in every section. The response should be as large and informative as possible.
 
 Image filename: ${originalName}`;
 
@@ -146,7 +283,7 @@ Image filename: ${originalName}`;
                         ],
                     },
                 ],
-                max_tokens: 4000,
+                max_tokens: 8000,
                 temperature: 0.1,
             };
 
@@ -213,92 +350,181 @@ Image filename: ${originalName}`;
     // Parse AI response into structured data
     parseAIResponse(aiResponse) {
         try {
+            // First, try to parse as JSON
+            let jsonData;
+            try {
+                // Clean the response to extract JSON
+                const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    jsonData = JSON.parse(jsonMatch[0]);
+                } else {
+                    throw new Error('No JSON found in response');
+                }
+            } catch (jsonError) {
+                console.warn('Failed to parse JSON response, falling back to text parsing:', jsonError.message);
+                return this.parseTextResponse(aiResponse);
+            }
+
+            // Convert JSON response to our expected format
             const analysis = {
                 status: 'completed',
-                description: '',
-                itemCategory: 'other',
-                confidence: 0.8,
+                itemName: jsonData.itemName || 'Unknown Item',
+                description: jsonData.description || '',
+                itemCategory: jsonData.itemCategory || 'other',
+                confidence: jsonData.confidence || 0.8,
                 recommendations: {
                     recycle: {
-                        possible: false,
-                        instructions: '',
-                        locations: [],
+                        possible: jsonData.recycle?.possible || false,
+                        instructions: jsonData.recycle?.instructions || '',
+                        preparation: jsonData.recycle?.preparation || '',
+                        materials: jsonData.recycle?.materials || [],
+                        difficulty: jsonData.recycle?.difficulty || 'medium',
+                        timeRequired: jsonData.recycle?.timeRequired || '',
+                        cost: jsonData.recycle?.cost || '',
+                        safetyNotes: jsonData.recycle?.safetyNotes || '',
+                        commonMistakes: jsonData.recycle?.commonMistakes || '',
+                        benefits: jsonData.recycle?.benefits || ''
                     },
-                    reuse: { possible: false, ideas: [] },
-                    donate: { possible: false, organizations: [] },
+                    reuse: {
+                        possible: jsonData.reuse?.possible || false,
+                        ideas: jsonData.reuse?.ideas || [],
+                        tips: jsonData.reuse?.tips || '',
+                        creativeInspiration: jsonData.reuse?.creativeInspiration || '',
+                        upcyclingPotential: jsonData.reuse?.upcyclingPotential || ''
+                    },
+                    donate: {
+                        possible: jsonData.donate?.possible || false,
+                        organizations: jsonData.donate?.organizations || [],
+                        preparation: jsonData.donate?.preparation || '',
+                        taxBenefits: jsonData.donate?.taxBenefits || '',
+                        impact: jsonData.donate?.impact || '',
+                        timing: jsonData.donate?.timing || '',
+                        documentation: jsonData.donate?.documentation || ''
+                    }
                 },
                 environmental: {
-                    carbonFootprint: 0,
-                    carbonSaved: 0,
-                    wasteReduction: 0,
-                    energySaved: 0,
+                    carbonFootprint: jsonData.environmental?.carbonFootprint || 0,
+                    carbonSaved: jsonData.environmental?.carbonSaved || 0,
+                    wasteReduction: jsonData.environmental?.wasteReduction || 0,
+                    energySaved: jsonData.environmental?.energySaved || 0,
+                    waterSaved: jsonData.environmental?.waterSaved || 0,
+                    impactDescription: jsonData.environmental?.impactDescription || '',
+                    decompositionTime: jsonData.environmental?.decompositionTime || '',
+                    pollutionPotential: jsonData.environmental?.pollutionPotential || '',
+                    resourceConservation: jsonData.environmental?.resourceConservation || '',
+                    globalImpact: jsonData.environmental?.globalImpact || ''
                 },
+                alternatives: jsonData.alternatives || [],
+                tips: jsonData.tips || [],
+                warnings: jsonData.warnings || [],
+                funFacts: jsonData.funFacts || []
             };
-
-            // Extract description (first paragraph usually contains item description)
-            const lines = aiResponse.split('\n').filter((line) => line.trim());
-            if (lines.length > 0) {
-                analysis.description = lines[0].replace(/^\d+\.\s*/, '').trim();
-            }
-
-            // Determine item category based on keywords
-            analysis.itemCategory = this.extractCategory(
-                aiResponse.toLowerCase()
-            );
-
-            // Extract recycling information
-            const recyclingInfo = this.extractSection(aiResponse, [
-                'recycl',
-                'recyl',
-            ]);
-            if (recyclingInfo) {
-                analysis.recommendations.recycle = {
-                    possible:
-                        recyclingInfo.includes('yes') ||
-                        recyclingInfo.includes('can be recycled') ||
-                        recyclingInfo.includes('recyclable'),
-                    instructions: recyclingInfo,
-                    locations: this.extractLocations(recyclingInfo),
-                };
-            }
-
-            // Extract reuse information
-            const reuseInfo = this.extractSection(aiResponse, [
-                'reus',
-                'repurpos',
-            ]);
-            if (reuseInfo) {
-                analysis.recommendations.reuse = {
-                    possible: reuseInfo.length > 50, // If substantial content, assume reuse is possible
-                    ideas: this.extractReuseIdeas(reuseInfo),
-                };
-            }
-
-            // Extract donation information
-            const donationInfo = this.extractSection(aiResponse, [
-                'donat',
-                'give away',
-                'charity',
-            ]);
-            if (donationInfo) {
-                analysis.recommendations.donate = {
-                    possible:
-                        donationInfo.includes('yes') ||
-                        donationInfo.includes('suitable') ||
-                        donationInfo.includes('can be donated'),
-                    organizations:
-                        this.extractDonationOrganizations(donationInfo),
-                };
-            }
-
-            // Extract environmental data
-            analysis.environmental = this.extractEnvironmentalData(aiResponse);
 
             return analysis;
         } catch (error) {
             console.error('Error parsing AI response:', error);
             return this.getDefaultAnalysis();
         }
+    }
+
+    // Fallback method for text-based responses
+    parseTextResponse(aiResponse) {
+        const analysis = {
+            status: 'completed',
+            itemName: 'Unknown Item',
+            description: '',
+            itemCategory: 'other',
+            confidence: 0.8,
+            recommendations: {
+                recycle: {
+                    possible: false,
+                    instructions: '',
+                    preparation: '',
+                    materials: [],
+                    locations: [],
+                    difficulty: 'medium',
+                    timeRequired: '',
+                    cost: ''
+                },
+                reuse: { 
+                    possible: false, 
+                    ideas: [],
+                    tips: ''
+                },
+                donate: { 
+                    possible: false, 
+                    organizations: [],
+                    preparation: '',
+                    taxBenefits: '',
+                    impact: ''
+                }
+            },
+            environmental: {
+                carbonFootprint: 0,
+                carbonSaved: 0,
+                wasteReduction: 0,
+                energySaved: 0,
+                waterSaved: 0,
+                impactDescription: ''
+            },
+            alternatives: [],
+            tips: []
+        };
+
+        // Extract description (first paragraph usually contains item description)
+        const lines = aiResponse.split('\n').filter((line) => line.trim());
+        if (lines.length > 0) {
+            analysis.description = lines[0].replace(/^\d+\.\s*/, '').trim();
+        }
+
+        // Determine item category based on keywords
+        analysis.itemCategory = this.extractCategory(aiResponse.toLowerCase());
+
+        // Extract recycling information
+        const recyclingInfo = this.extractSection(aiResponse, ['recycl', 'recyl']);
+        if (recyclingInfo) {
+            analysis.recommendations.recycle = {
+                possible: recyclingInfo.includes('yes') || 
+                         recyclingInfo.includes('can be recycled') || 
+                         recyclingInfo.includes('recyclable'),
+                instructions: recyclingInfo,
+                preparation: '',
+                materials: [],
+                locations: this.extractLocations(recyclingInfo),
+                difficulty: 'medium',
+                timeRequired: '',
+                cost: ''
+            };
+        }
+
+        // Extract reuse information
+        const reuseInfo = this.extractSection(aiResponse, ['reus', 'repurpos']);
+        if (reuseInfo) {
+            analysis.recommendations.reuse = {
+                possible: reuseInfo.length > 50,
+                ideas: this.extractReuseIdeas(reuseInfo),
+                tips: ''
+            };
+        }
+
+        // Extract donation information
+        const donationInfo = this.extractSection(aiResponse, ['donat', 'give away', 'charity']);
+        if (donationInfo) {
+            analysis.recommendations.donate = {
+                possible: donationInfo.includes('yes') || 
+                         donationInfo.includes('suitable') || 
+                         donationInfo.includes('can be donated'),
+                organizations: this.extractDonationOrganizations(donationInfo),
+                preparation: '',
+                taxBenefits: '',
+                impact: ''
+            };
+        }
+
+        // Extract environmental data
+        analysis.environmental = this.extractEnvironmentalData(aiResponse);
+
+        return analysis;
     }
 
     // Extract category from AI response
@@ -507,9 +733,13 @@ Image filename: ${originalName}`;
         return {
             recycle: {
                 possible: true,
-                instructions:
-                    'Check with your local recycling center for specific guidelines.',
+                instructions: 'Check with your local recycling center for specific guidelines.',
+                preparation: 'Clean and dry the item before recycling',
+                materials: ['Check local guidelines'],
                 locations: this.extractLocations(''),
+                difficulty: 'easy',
+                timeRequired: '5-10 minutes',
+                cost: 'Usually free'
             },
             reuse: {
                 possible: true,
@@ -518,17 +748,29 @@ Image filename: ${originalName}`;
                         title: 'Creative Storage',
                         description: 'Use as storage container for small items',
                         difficulty: 'easy',
+                        timeRequired: 'Immediate',
+                        materialsNeeded: [],
+                        steps: ['Clean the item', 'Find a use for it'],
+                        benefits: 'Reduces waste and saves money'
                     },
                     {
                         title: 'DIY Project',
                         description: 'Transform into a useful household item',
                         difficulty: 'medium',
+                        timeRequired: '1-2 hours',
+                        materialsNeeded: ['Basic tools'],
+                        steps: ['Plan the project', 'Gather materials', 'Execute the transformation'],
+                        benefits: 'Creates something unique and useful'
                     },
                 ],
+                tips: 'Think creatively about how the item could serve a new purpose'
             },
             donate: {
                 possible: true,
                 organizations: this.extractDonationOrganizations(''),
+                preparation: 'Clean and ensure the item is in good condition',
+                taxBenefits: 'May be eligible for tax deduction',
+                impact: 'Helps others and reduces waste'
             },
         };
     }
@@ -540,6 +782,8 @@ Image filename: ${originalName}`;
             carbonSaved: 0.3,
             wasteReduction: 1.0,
             energySaved: 2.0,
+            waterSaved: 5.0,
+            impactDescription: 'Proper disposal helps reduce environmental impact'
         };
     }
 
@@ -547,12 +791,14 @@ Image filename: ${originalName}`;
     getDefaultAnalysis() {
         return {
             status: 'completed',
-            description:
-                'Unable to fully analyze the image, but here are general sustainability recommendations.',
+            itemName: 'Unknown Item',
+            description: 'Unable to fully analyze the image, but here are general sustainability recommendations.',
             itemCategory: 'other',
             confidence: 0.3,
             recommendations: this.getDefaultRecommendations(),
             environmental: this.getDefaultEnvironmentalData(),
+            alternatives: [],
+            tips: ['Check with local recycling centers', 'Consider creative reuse ideas', 'Look for donation opportunities'],
             processingTime: 0,
         };
     }
