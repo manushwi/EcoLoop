@@ -5,6 +5,10 @@
 let selectedFile = null;
 let uploadId = null;
 let selectedAction = null;
+let authCheckInProgress = false;
+let analysisCheckInProgress = false;
+let lastAuthCheck = 0;
+const AUTH_CHECK_COOLDOWN = 30000; // 30 seconds between auth checks
 
 // Initialize page when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
@@ -14,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupEventListeners();
     handleInitialRestoreOrReset();
 });
+
 function handleInitialRestoreOrReset() {
     const params = new URLSearchParams(window.location.search);
     const isNew = params.get('new') === '1';
@@ -24,8 +29,7 @@ function handleInitialRestoreOrReset() {
     }
     let shouldRestore = false;
     try {
-        shouldRestore =
-            sessionStorage.getItem('returnToUploadWithRestore') === '1';
+        shouldRestore = sessionStorage.getItem('returnToUploadWithRestore') === '1';
     } catch (_) {}
     if (shouldRestore) {
         restoreFromSession();
@@ -65,6 +69,7 @@ function resetUploadForm() {
     }
     if (finalUploadBtn) finalUploadBtn.style.display = 'none';
 }
+
 // Restore last analysis so user doesn't need to re-upload on return
 async function restoreFromSession() {
     let lastId = null;
@@ -74,24 +79,52 @@ async function restoreFromSession() {
     if (!lastId) return;
 
     try {
-        const res = await fetch(
+        const res = await fetchWithRetry(
             `/api/upload/${encodeURIComponent(lastId)}/result`,
-            { credentials: 'include' }
+            { credentials: 'include' },
+            1 // Only 1 retry for restore
         );
         if (!res.ok) return;
         const payload = await res.json();
         if (!payload.success) return;
         const data = payload.data;
         if (data && data.analysis) {
-            uploadId = data.uploadId; // reuse existing id for actions
+            uploadId = data.uploadId;
             showResults(data);
         }
     } catch (e) {
-        // ignore restore errors
+        console.log('Could not restore session, starting fresh');
     }
 }
 
-// Removed client-side health check to avoid hitting rate limits
+// Fetch with retry and exponential backoff
+async function fetchWithRetry(url, options = {}, maxRetries = 3, baseDelay = 1000) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch(url, options);
+            
+            // If we get a rate limit error, wait and retry
+            if (response.status === 429) {
+                if (attempt < maxRetries) {
+                    const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000;
+                    console.log(`Rate limited, retrying in ${delay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue;
+                }
+            }
+            
+            return response;
+        } catch (error) {
+            if (attempt < maxRetries) {
+                const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000;
+                console.log(`Request failed, retrying in ${delay}ms...`, error.message);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                continue;
+            }
+            throw error;
+        }
+    }
+}
 
 // Create floating background particles
 function createBackgroundParticles() {
@@ -214,8 +247,8 @@ function setupDragAndDrop() {
 // Handle keyboard shortcuts
 function handleKeyboardShortcuts(e) {
     if (e.key === 'Escape') {
-        if (document.getElementById('uploadOverlay').style.display === 'flex') {
-            // Don't allow closing during upload
+        const overlay = document.getElementById('uploadOverlay');
+        if (overlay && overlay.style.display === 'flex') {
             return;
         }
     }
@@ -223,23 +256,43 @@ function handleKeyboardShortcuts(e) {
     if (
         e.key === 'Enter' &&
         selectedFile &&
-        document.getElementById('uploadOverlay').style.display !== 'flex'
+        (function(){ const ov = document.getElementById('uploadOverlay'); return !ov || ov.style.display !== 'flex'; })()
     ) {
         uploadImage();
     }
 }
 
-// Authentication check
+// Authentication check with rate limiting prevention
 async function checkAuthStatus() {
+    // Prevent multiple concurrent auth checks
+    if (authCheckInProgress) {
+        console.log('Auth check already in progress, skipping');
+        return;
+    }
+    
+    // Rate limit auth checks
+    const now = Date.now();
+    if (now - lastAuthCheck < AUTH_CHECK_COOLDOWN) {
+        console.log('Auth check on cooldown, skipping');
+        return;
+    }
+    
+    authCheckInProgress = true;
+    lastAuthCheck = now;
+    
     try {
         console.log('Checking authentication status...');
-        const response = await fetch('/api/auth/status', {
+        const response = await fetchWithRetry('/api/auth/status', {
             credentials: 'include',
-        });
+        }, 2); // Max 2 retries for auth check
 
         console.log('Auth check response:', response.status);
 
         if (!response.ok) {
+            if (response.status === 429) {
+                console.log('Auth check rate limited, user likely still authenticated');
+                return; // Don't redirect on rate limit
+            }
             console.log('Auth check failed with status:', response.status);
             window.location.href = '/login';
             return;
@@ -257,8 +310,14 @@ async function checkAuthStatus() {
         console.log('User authenticated successfully');
     } catch (error) {
         console.error('Auth check error:', error);
-        // For debugging, let's not redirect immediately
-        showError('Authentication check failed. Some features may not work.');
+        // Don't redirect on network errors, just show warning
+        if (error.message.includes('429')) {
+            console.log('Rate limited during auth check, assuming user is authenticated');
+        } else {
+            showError('Connection issue. Some features may not work.');
+        }
+    } finally {
+        authCheckInProgress = false;
     }
 }
 
@@ -279,7 +338,6 @@ function handleFileSelect(event) {
         lastModified: file.lastModified,
     });
 
-    // Validate file
     if (!validateFile(file)) {
         console.log('File validation failed');
         return;
@@ -357,15 +415,8 @@ function showImagePreview(file) {
 
         // Persist preview data URL for later fallback on results image
         try {
-            if (
-                typeof sessionStorage !== 'undefined' &&
-                e.target &&
-                e.target.result
-            ) {
-                sessionStorage.setItem(
-                    'lastPreviewDataUrl',
-                    String(e.target.result)
-                );
+            if (typeof sessionStorage !== 'undefined' && e.target && e.target.result) {
+                sessionStorage.setItem('lastPreviewDataUrl', String(e.target.result));
             }
         } catch (err) {
             // ignore storage errors
@@ -373,8 +424,7 @@ function showImagePreview(file) {
 
         // Add confirmation text
         if (cameraText) {
-            cameraText.textContent =
-                'Image selected! Click "Analyze & Upload" to continue';
+            cameraText.textContent = 'Image selected! Click "Analyze & Upload" to continue';
             cameraText.style.display = 'block';
             cameraText.style.color = '#1fd461';
             cameraText.style.marginTop = '16px';
@@ -389,11 +439,7 @@ async function openCamera() {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
         });
-        // Here you would implement camera capture functionality
-        // For now, we'll just trigger the file input
         document.getElementById('fileInput').click();
-
-        // Stop the stream
         stream.getTracks().forEach((track) => track.stop());
     } catch (error) {
         console.log('Camera not available, using file input');
@@ -408,44 +454,35 @@ async function uploadImage() {
         return;
     }
 
-    console.log(
-        'Starting upload for file:',
-        selectedFile.name,
-        'Size:',
-        selectedFile.size
-    );
+    console.log('Starting upload for file:', selectedFile.name, 'Size:', selectedFile.size);
     showUploadOverlay();
 
     try {
-        // Create FormData
         const formData = new FormData();
         formData.append('image', selectedFile);
 
         console.log('FormData created, making request to /api/upload/image');
-
-        // Simulate progress
         simulateProgress();
 
-        // Make the upload request
-        const response = await fetch('/api/upload/image', {
+        const response = await fetchWithRetry('/api/upload/image', {
             method: 'POST',
             body: formData,
             credentials: 'include',
-            // Don't set Content-Type header, let browser set it with boundary
-        });
+        }, 3); // Allow 3 retries for upload
 
         console.log('Response received:', response.status, response.statusText);
 
-        // Check if response is ok
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Response not ok:', errorText);
-            throw new Error(
-                `Upload failed: ${response.status} ${response.statusText}`
-            );
+            
+            if (response.status === 429) {
+                throw new Error('Server is busy. Please wait a moment and try again.');
+            }
+            
+            throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
         }
 
-        // Parse JSON response
         let result;
         try {
             result = await response.json();
@@ -463,21 +500,17 @@ async function uploadImage() {
         uploadId = result.data.uploadId;
         console.log('Upload successful, uploadId:', uploadId);
 
-        // Wait for AI analysis
         await waitForAnalysis(uploadId);
     } catch (error) {
         console.error('Upload error:', error);
         hideUploadOverlay();
 
-        // Show more specific error messages
-        if (error.name === 'TypeError' && error.message.includes('fetch')) {
-            showError(
-                'Network error. Please check your connection and try again.'
-            );
+        if (error.message.includes('Server is busy')) {
+            showError('Server is busy. Please wait a moment and try again.');
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            showError('Network error. Please check your connection and try again.');
         } else if (error.message.includes('413')) {
-            showError(
-                'File too large. Please choose a smaller image (max 10MB).'
-            );
+            showError('File too large. Please choose a smaller image (max 10MB).');
         } else if (error.message.includes('401')) {
             showError('Please log in again to upload images.');
             setTimeout(function () {
@@ -541,40 +574,51 @@ function simulateProgress() {
     updateProgress();
 }
 
-// Wait for AI analysis to complete
+// Wait for AI analysis to complete with improved rate limiting
 async function waitForAnalysis(uploadId) {
-    const maxAttempts = 30; // 30 seconds max wait
+    if (analysisCheckInProgress) {
+        console.log('Analysis check already in progress');
+        return;
+    }
+    
+    analysisCheckInProgress = true;
+    const maxAttempts = 20; // Reduced from 30
     let attempts = 0;
+    let consecutiveFailures = 0;
 
     console.log('Starting to wait for analysis, uploadId:', uploadId);
 
     const checkAnalysis = async function () {
         try {
-            console.log(
-                `Checking analysis status, attempt ${
-                    attempts + 1
-                }/${maxAttempts}`
-            );
+            console.log(`Checking analysis status, attempt ${attempts + 1}/${maxAttempts}`);
 
-            const response = await fetch(`/api/upload/${uploadId}/result`, {
+            const response = await fetchWithRetry(`/api/upload/${uploadId}/result`, {
                 credentials: 'include',
-            });
+            }, 2); // Max 2 retries per check
 
             console.log('Analysis check response:', response.status);
 
             if (!response.ok) {
-                throw new Error(
-                    `Failed to check analysis status: ${response.status}`
-                );
+                if (response.status === 429) {
+                    consecutiveFailures++;
+                    if (consecutiveFailures >= 3) {
+                        throw new Error('Server is overloaded. Please try again in a few minutes.');
+                    }
+                    // Longer delay for rate limiting
+                    const delay = Math.min(15000, 5000 * consecutiveFailures);
+                    console.log(`Rate limited, waiting ${delay / 1000}s before retry...`);
+                    setTimeout(checkAnalysis, delay);
+                    return;
+                }
+                throw new Error(`Failed to check analysis status: ${response.status}`);
             }
 
+            consecutiveFailures = 0; // Reset on successful response
             const result = await response.json();
             console.log('Analysis result:', result);
 
             if (!result.success) {
-                throw new Error(
-                    'Failed to get analysis result: ' + result.message
-                );
+                throw new Error('Failed to get analysis result: ' + result.message);
             }
 
             const analysis = result.data.analysis;
@@ -582,36 +626,40 @@ async function waitForAnalysis(uploadId) {
 
             if (analysis.status === 'completed') {
                 console.log('Analysis completed successfully');
+                analysisCheckInProgress = false;
                 hideUploadOverlay();
                 showResults(result.data);
                 showSuccessMessage();
             } else if (analysis.status === 'failed') {
                 console.error('Analysis failed:', analysis.error);
+                analysisCheckInProgress = false;
                 throw new Error(analysis.error || 'AI analysis failed');
-            } else if (
-                analysis.status === 'processing' ||
-                analysis.status === 'pending'
-            ) {
+            } else if (analysis.status === 'processing' || analysis.status === 'pending') {
                 if (attempts < maxAttempts) {
                     attempts++;
-                    console.log(
-                        'Analysis still processing, checking again in 1 second...'
-                    );
-                    setTimeout(checkAnalysis, 1000);
+                    // Progressive delay: start with 3s, increase to max 8s
+                    const baseDelay = 3000;
+                    const maxDelay = 8000;
+                    const delay = Math.min(maxDelay, baseDelay + (attempts * 500));
+                    console.log(`Analysis still processing, checking again in ${delay / 1000}s...`);
+                    setTimeout(checkAnalysis, delay);
                 } else {
-                    throw new Error('Analysis timeout. Please try again.');
+                    analysisCheckInProgress = false;
+                    throw new Error('Analysis is taking longer than expected. Please check back in a few minutes.');
                 }
             } else {
                 console.warn('Unknown analysis status:', analysis.status);
                 if (attempts < maxAttempts) {
                     attempts++;
-                    setTimeout(checkAnalysis, 1000);
+                    setTimeout(checkAnalysis, 8000); // 8s delay for unknown status
                 } else {
+                    analysisCheckInProgress = false;
                     throw new Error('Analysis timeout. Please try again.');
                 }
             }
         } catch (error) {
             console.error('Analysis check error:', error);
+            analysisCheckInProgress = false;
             hideUploadOverlay();
             showError(error.message);
         }
@@ -626,7 +674,6 @@ function showResults(data) {
     const resultsContainer = document.getElementById('resultsContainer');
     const uploadedImage = document.getElementById('uploadedImage');
 
-    // Hide scanner card and show results
     if (scannerCard) {
         scannerCard.style.display = 'none';
     }
@@ -634,21 +681,18 @@ function showResults(data) {
         resultsContainer.style.display = 'grid';
     }
 
-    // Set uploaded image
     if (uploadedImage) {
-        const previewUrl =
-            (function () {
-                try {
-                    return sessionStorage.getItem('lastPreviewDataUrl');
-                } catch (_) {
-                    return null;
-                }
-            })() || '';
+        const previewUrl = (function () {
+            try {
+                return sessionStorage.getItem('lastPreviewDataUrl');
+            } catch (_) {
+                return null;
+            }
+        })() || '';
         if (previewUrl) {
             uploadedImage.src = previewUrl;
         }
         if (data && data.fileUrl) {
-            // Try server URL; if it fails, keep preview
             const serverUrl = data.fileUrl;
             const tempImg = new Image();
             tempImg.onload = function () {
@@ -661,7 +705,6 @@ function showResults(data) {
         }
     }
 
-    // Persist identifiers for result pages
     try {
         if (typeof sessionStorage !== 'undefined') {
             if (data && data.uploadId) {
@@ -669,16 +712,10 @@ function showResults(data) {
             }
             if (data && data.analysis) {
                 if (data.analysis.itemCategory) {
-                    sessionStorage.setItem(
-                        'lastItemCategory',
-                        String(data.analysis.itemCategory)
-                    );
+                    sessionStorage.setItem('lastItemCategory', String(data.analysis.itemCategory));
                 }
                 if (data.analysis.description) {
-                    sessionStorage.setItem(
-                        'lastItemDescription',
-                        String(data.analysis.description)
-                    );
+                    sessionStorage.setItem('lastItemDescription', String(data.analysis.description));
                 }
             }
         }
@@ -686,27 +723,22 @@ function showResults(data) {
         // ignore storage errors
     }
 
-    // Populate results with AI analysis
     if (data.analysis && data.analysis.status === 'completed') {
         populateAnalysisResults(data.analysis);
     } else {
-        // Show default/placeholder data
         showDefaultResults();
     }
 
-    // Add action controls below options, styled like "Take photo"
     try {
         const controlsHost = document.getElementById('resultsControls');
         if (controlsHost && controlsHost.childElementCount === 0) {
             controlsHost.innerHTML = `
         <div class="button-group" style="gap:10px;">
           <a href="/upload?new=1" id="uploadAnotherBtn">⛶ Scan Another Item</a>
-          <b href="/dashboard" id="goDashboardBtn">📊 Go to Dashboard</b>
+          <a href="/dashboard" id="goDashboardBtn">📊 Go to Dashboard</a>
         </div>
       `;
-            // Ensure links navigate properly
-            const uploadAnotherBtn =
-                document.getElementById('uploadAnotherBtn');
+            const uploadAnotherBtn = document.getElementById('uploadAnotherBtn');
             const goDashboardBtn = document.getElementById('goDashboardBtn');
             if (uploadAnotherBtn) {
                 uploadAnotherBtn.addEventListener('click', function (e) {
@@ -729,12 +761,8 @@ function populateAnalysisResults(analysis) {
     const material = document.getElementById('material');
     const condition = document.getElementById('condition');
 
-    // Set item name/description as title if available, otherwise fallback to category
     if (itemTitle) {
-        const descriptionTitle = (analysis.description || '')
-            .split('\n')
-            .filter(Boolean)[0]
-            ?.trim();
+        const descriptionTitle = (analysis.description || '').split('\n').filter(Boolean)[0]?.trim();
         if (descriptionTitle && descriptionTitle.length > 0) {
             itemTitle.textContent = descriptionTitle;
         } else if (analysis.itemCategory) {
@@ -742,7 +770,6 @@ function populateAnalysisResults(analysis) {
         }
     }
 
-    // Set material/category info from API
     if (material) {
         if (analysis.itemCategory) {
             material.textContent = capitalizeFirst(analysis.itemCategory);
@@ -751,42 +778,28 @@ function populateAnalysisResults(analysis) {
         }
     }
 
-    // Map API environmental metrics instead of hardcoded decompose times
     if (decomposeTime) {
         const env = analysis.environmental || {};
-        const footprint =
-            typeof env.carbonFootprint === 'number'
-                ? env.carbonFootprint
-                : null;
-        decomposeTime.textContent =
-            footprint != null ? `${footprint.toFixed(2)} kg CO2` : '-';
+        const footprint = typeof env.carbonFootprint === 'number' ? env.carbonFootprint : null;
+        decomposeTime.textContent = footprint != null ? `${footprint.toFixed(2)} kg CO2` : '-';
     }
 
-    // Set condition based on confidence
     if (analysis.confidence && condition) {
         condition.textContent = `${Math.round(analysis.confidence * 100)}%`;
     }
 
-    // Update action bars based on recommendations
     updateActionBars(analysis.recommendations);
 
-    // Persist last upload info for result pages
     try {
         if (typeof sessionStorage !== 'undefined') {
-            if (window.uploadId) {
-                sessionStorage.setItem('lastUploadId', String(window.uploadId));
+            if (uploadId) {
+                sessionStorage.setItem('lastUploadId', String(uploadId));
             }
             if (analysis.itemCategory) {
-                sessionStorage.setItem(
-                    'lastItemCategory',
-                    String(analysis.itemCategory)
-                );
+                sessionStorage.setItem('lastItemCategory', String(analysis.itemCategory));
             }
             if (analysis.description) {
-                sessionStorage.setItem(
-                    'lastItemDescription',
-                    String(analysis.description)
-                );
+                sessionStorage.setItem('lastItemDescription', String(analysis.description));
             }
         }
     } catch (e) {
@@ -796,7 +809,6 @@ function populateAnalysisResults(analysis) {
 
 // Show default results (fallback)
 function showDefaultResults() {
-    // Keep the default values from HTML
     console.log('Using default results');
 }
 
@@ -813,16 +825,13 @@ function updateActionBars(recommendations) {
         let fillCount = 3; // default
 
         if (recommendations[action] && recommendations[action].possible) {
-            // If action is possible, show more bars filled
             fillCount = 4;
         }
 
-        // Clear all filled classes
         bars.forEach(function (bar) {
             bar.classList.remove('filled');
         });
 
-        // Fill appropriate number of bars
         for (let i = 0; i < fillCount && i < bars.length; i++) {
             bars[i].classList.add('filled');
         }
@@ -831,16 +840,13 @@ function updateActionBars(recommendations) {
 
 // Select action option
 function selectAction(element, action) {
-    // Remove previous selection
     document.querySelectorAll('.action-option').forEach(function (option) {
         option.classList.remove('selected');
     });
 
-    // Select current option
     element.classList.add('selected');
     selectedAction = action;
 
-    // Send action to backend
     if (uploadId) {
         submitAction(action);
     }
@@ -849,24 +855,21 @@ function selectAction(element, action) {
 // Submit selected action to backend
 async function submitAction(action) {
     try {
-        const response = await fetch(`/api/upload/${uploadId}/action`, {
+        const response = await fetchWithRetry(`/api/upload/${uploadId}/action`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ action: action }),
             credentials: 'include',
-        });
+        }, 2);
 
         const result = await response.json();
 
         if (result.success) {
             console.log('Action recorded successfully:', result.data);
             showActionFeedback(action);
-            // Redirect to respective page with uploadId to show detailed result
-            const redirectUrl = `/${action}?uploadId=${encodeURIComponent(
-                uploadId
-            )}`;
+            const redirectUrl = `/${action}?uploadId=${encodeURIComponent(uploadId)}`;
             setTimeout(function () {
                 window.location.href = redirectUrl;
             }, 600);
@@ -905,7 +908,6 @@ function showSuccessMessage() {
 
 // Show error message
 function showError(message) {
-    // Remove any existing error messages
     const existingError = document.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
@@ -969,21 +971,33 @@ function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Handle page visibility changes
+// Handle page visibility changes (with rate limiting)
 document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
+        // Only check auth if page was hidden for more than 5 minutes
+        const timeSinceLastCheck = Date.now() - lastAuthCheck;
+        if (timeSinceLastCheck > 300000) { // 5 minutes
+            checkAuthStatus();
+        }
+    }
+});
+
+// Handle page focus (with rate limiting)
+window.addEventListener('focus', function () {
+    // Only check auth if it's been more than 1 minute since last check
+    const timeSinceLastCheck = Date.now() - lastAuthCheck;
+    if (timeSinceLastCheck > 60000) { // 1 minute
         checkAuthStatus();
     }
 });
 
-// Handle page focus
-window.addEventListener('focus', function () {
-    checkAuthStatus();
-});
-
-// Handle browser back/forward
+// Handle browser back/forward (with rate limiting)
 window.addEventListener('pageshow', function (event) {
     if (event.persisted) {
-        checkAuthStatus();
+        // Only check auth if it's been more than 30 seconds since last check
+        const timeSinceLastCheck = Date.now() - lastAuthCheck;
+        if (timeSinceLastCheck > 30000) { // 30 seconds
+            checkAuthStatus();
+        }
     }
 });

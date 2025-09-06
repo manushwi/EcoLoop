@@ -267,134 +267,288 @@
         </div>
     </div>
 
+    <div class="page4">
+         <div class="scroll-container" id="scrollContainer">
+    <div class="animation-wrapper">
+      <div class="header" id="header">
+        <h1>
 
+          <img src="/assets/arrow (2).png" alt="">
+        </h1>
+        <h1>Scroll Down</h1>
+        <p>For more information on CodeFetch chrome extension scroll down to learn more </p>
+      </div>
 
-    <!-- <div class="page3">
-        <div class="vertical-progress">
-            <div class="vertical-progress-fill" id="verticalProgressFill"></div>
-            <div class="progress-steps">
-                <div class="progress-step" data-step="1">1</div>
-                <div class="progress-step" data-step="2">2</div>
-                <div class="progress-step" data-step="3">3</div>
+      <div class="card-container" id="cardContainer">
+        <div class="card-inner">
+          <div class="demo-content">
+            <div class="video-container">
+                <iframe id="youtubeVideo" src="https://www.youtube.com/embed/8flfpEaSYYM?si=ww3x2fBQhB6S3SLc" frameborder="0" allow="autoplay;encrypted-media;"allowfullscreen></iframe>
+              </iframe>
             </div>
+
+          </div>
         </div>
-        <div class="step-section" id="step1">
-            <div class="step-content">
-                <div class="step-info">
-                    <div class="step-number">1</div>
-                    <h2 class="step-title">Upload & Analyze</h2>
-                    <p class="step-description">
-                        Take a photo of any item you want to dispose of responsibly. Our AI
-                        instantly analyzes the material, condition, and sustainability options.
-                    </p>
-                </div>
-                <div class="step-visual">
-                    <div class="safari" role="region" aria-label="browser window">
-                        <div class="safari-top">
-                            <div class="safari-controls">
-                                <div class="traffic" aria-hidden="true">
-                                    <span class="dot red"></span>
-                                    <span class="dot yellow"></span>
-                                    <span class="dot green"></span>
-                                </div>
-                            </div>
+      </div>
+    </div>
+  </div>
 
-                            <div class="tabs" role="tablist" aria-label="tabs">
-                                <div class="tab active" role="tab" aria-selected="true">Upload</div>
-                                <div class="tab" role="tab">Examples</div>
-                                <div class="tab" role="tab">Playground</div>
-                            </div>
+    </div>
+   <div class="page5">
+     <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>EcoLoop</h3>
+        <p>
+          Our Chrome Extension makes web inspection easy and beginner-friendly.
+          With one click, you can hover over any element on a live site to see its HTML and CSS, extract images, videos,
+          and SVGs
+        </p>
+      </div>
 
-                            <div style="width:8px"></div>
-                        </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a style="cursor: pointer;"
+              onclick="document.getElementById('main').scrollIntoView({ behavior: 'smooth' });">Home</a></li>
+          <li><a style="cursor: pointer;"
+              onclick="document.getElementById('cards').scrollIntoView({ behavior: 'smooth' });">About</a>
+          </li>
+          <li><a style="cursor: pointer;">Contact</a></li>
+        </ul>
+      </div>
 
-                        <div class="toolbar" role="toolbar" aria-label="browser toolbar">
-                            <div class="nav">
-                                <div class="btn" title="Back">◀</div>
-                                <div class="btn" title="Forward">▶</div>
-                            </div>
+      <div class="footer-contact" id="contactUs">
+        <h4>Contact Us</h4>
+        <div class="tooltip-container" id="tooltipContainer">
+          <!-- Tooltips will be dynamically generated -->
+        </div>
+      </div>
+    </div>
 
-                            <div class="address" role="search">
-                                <div class="favicon" aria-hidden="true"></div>
-                                <input aria-label="address bar" value="https:/ecoloop.com" readonly />
-                            </div>
 
-                            <div class="actions">
-                                <div class="btn" title="Share">⤴</div>
-                                <div class="btn" title="Bookmarks">★</div>
-                                <div class="btn" title="Settings">⋯</div>
-                            </div>
-                        </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 EcoLoop. All rights reserved.</p>
+      <p>made by Manushwi, Anurag, Ankur, Ashish</p>
+    </div>
+  </footer>
+   </div>
 
-                        <div class="content">
-                            <div class="card">
-                                <div class="mock-site">
-                                    <video loop autoplay  src="/public/images/Drag & drop.mp4"></video>
-                                </div>
-                            </div>
-                        </div>
+    <script>
+    class ContainerScrollAnimation {
+      constructor() {
+        this.scrollContainer = document.getElementById('scrollContainer');
+        this.cardContainer = document.getElementById('cardContainer');
+        this.header = document.getElementById('header');
+        this.scrollProgress = document.getElementById('scrollProgress');
+
+        this.isMobile = window.innerWidth <= 768;
+
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.handleScroll();
+      }
+
+      setupEventListeners() {
+        window.addEventListener('scroll', () => this.handleScroll());
+        window.addEventListener('resize', () => {
+          this.isMobile = window.innerWidth <= 768;
+          this.handleScroll();
+        });
+      }
+
+      handleScroll() {
+        const scrollProgress = this.getScrollProgress();
+        this.updateAnimations(scrollProgress);
+        this.updateScrollIndicator(scrollProgress);
+      }
+
+      getScrollProgress() {
+        const containerRect = this.scrollContainer.getBoundingClientRect();
+        const containerTop = containerRect.top;
+        const containerHeight = containerRect.height;
+        const windowHeight = window.innerHeight;
+
+        // Calculate when container enters and exits viewport
+        const startOffset = windowHeight;
+        const endOffset = windowHeight * 0.000001;
+
+        const totalDistance = startOffset - endOffset;
+        const currentProgress = (startOffset - containerTop) / totalDistance;
+
+        return Math.max(0, Math.min(1, currentProgress));
+      }
+
+      updateAnimations(progress) {
+        // Rotation: starts at 20deg, ends at 0deg
+        const rotation = 80 - (progress * 80);
+
+        // Scale: mobile (0.7 to 0.9), desktop (1.05 to 1.0)
+        const scaleStart = this.isMobile ? 0.7 : 1.05;
+        const scaleEnd = this.isMobile ? 0.9 : 1.0;
+        const scale = scaleStart + (progress * (scaleEnd - scaleStart));
+
+        // Translation: header moves up as we scroll
+        const headerTranslate = progress * -100;
+
+        // Apply transforms
+        this.cardContainer.style.transform = `rotateX(${rotation}deg) scale(${scale})`;
+        this.header.style.transform = `translateY(${headerTranslate}px)`;
+
+        // Optional: Add some opacity fade to header
+        this.header.style.opacity = Math.max(0.3, 1 - (progress * 0.7));
+      }
+
+      updateScrollIndicator(progress) {
+        const height = Math.max(0, Math.min(100, progress * 100));
+        this.scrollProgress.style.height = `${height}%`;
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new ContainerScrollAnimation();
+    });
+
+    // Add some extra scroll smoothness for webkit browsers
+    document.documentElement.style.scrollBehavior = 'smooth';
+  </script>
+
+    <script>
+    // Sample data for tooltips
+    const tooltipData = [
+      {
+        name: "Manushwi Raj",
+        role: "Team Leader",
+        avatar: "/public/images/manushwi.jpg",
+        id: "marcus",
+        link: "https://www.linkedin.com/in/manushwi-raj-bhardwaj/"
+      },
+      {
+        name: "Anurag Singh",
+        role: "Web designer",
+        avatar: "/public/images/anurag.jpg",
+        id: "elena",
+        link: "https://www.linkedin.com/in/anurag-singh-003958353/"
+      },
+      {
+        name: "Ankur Singh",
+        role: "Speaker",
+        avatar: "/public/images/ankur.jpg",
+        id: "david",
+        link: "https://www.linkedin.com/in/ankur-singh-06a95a353/"
+      },
+      {
+        name: "Ashish Pal",
+        role: "UI Developer",
+        avatar: "/public/images/ashish.jpg",
+        id: "priya",
+        link: "https://www.linkedin.com/in/ashish-pal-05710a312/"
+      }
+    ];
+
+    // Generate tooltip HTML
+    function createTooltipHTML(person) {
+      return `
+                <div class="tooltip-item" data-id="${person.id}">
+                    <a href="${person.link}" target="_blank">
+                      <img src="${person.avatar}" class="avatar" alt="${person.name}" loading="lazy">
+                    </a>
+                    
+                    <div class="tooltip">
+                        <div class="tooltip-name">${person.name}</div>
+                        <div class="tooltip-role">${person.role}</div>
                     </div>
+                </div>
+            `;
+    }
 
-                </div>
-            </div>
-        </div>
+    // Initialize tooltips
+    function initializeTooltips() {
+      const container = document.getElementById('tooltipContainer');
+      const tooltipHTML = tooltipData.map(person => createTooltipHTML(person)).join('');
+      container.innerHTML = tooltipHTML;
 
-        <div class="step-section" id="step2">
-            <div class="step-content">
-                <div class="step-info">
-                    <div class="step-number">2</div>
-                    <h2 class="step-title">Get Recommendations</h2>
-                    <p class="step-description">
-                        Receive personalized recommendations for recycling, reusing, or
-                        donating your item, complete with local resources and DIY ideas.
-                    </p>
-                </div>
-                <div class="step-visual">
-                    <div class="options-panel">
-                        <div class="option-button">
-                            <span class="option-icon">♻️</span>
-                            <span>Recycle</span>
-                        </div>
-                        <div class="option-button">
-                            <span class="option-icon">🔄</span>
-                            <span>Reuse</span>
-                        </div>
-                        <div class="option-button">
-                            <span class="option-icon">❤️</span>
-                            <span>Donate</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      // Add enhanced hover effects
+      const tooltipItems = container.querySelectorAll('.tooltip-item');
 
-        <div class="step-section" id="step3">
-            <div class="step-content">
-                <div class="step-info">
-                    <div class="step-number">3</div>
-                    <h2 class="step-title">Track Your Impact</h2>
-                    <p class="step-description">
-                        Monitor your environmental contribution with detailed analytics showing
-                        CO2 saved, waste diverted, and community impact.
-                    </p>
-                </div>
-                <div class="step-visual">
-                    <div class="analytics-chart">
-                        <h4 style="margin-bottom: 10px; opacity: 0.9; color: white;">Your Impact</h4>
-                        <div class="chart-bars">
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
+      tooltipItems.forEach((item, index) => {
+        // Staggered entrance animation
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.style.animation = 'fadeInUp 0.6s ease-out forwards';
 
-    <div class="page4"></div>
-    <div class="page5"></div>
+        // Enhanced interaction effects
+        item.addEventListener('mouseenter', function () {
+          // Subtle scale effect on other items
+          tooltipItems.forEach((otherItem, otherIndex) => {
+            if (otherIndex !== index) {
+              otherItem.style.transform = 'scale(0.95)';
+              otherItem.style.opacity = '0.7';
+            }
+          });
+        });
+
+        item.addEventListener('mouseleave', function () {
+          // Reset all items
+          tooltipItems.forEach(otherItem => {
+            otherItem.style.transform = '';
+            otherItem.style.opacity = '';
+          });
+        });
+
+        // Handle image loading errors
+        const img = item.querySelector('.avatar');
+        img.addEventListener('error', function () {
+          this.style.background = `linear-gradient(135deg, 
+                        hsl(${Math.random() * 360}, 70%, 60%) 0%, 
+                        hsl(${Math.random() * 360}, 70%, 50%) 100%)`;
+          this.innerHTML = person.name.charAt(0);
+          this.style.display = 'flex';
+          this.style.alignItems = 'center';
+          this.style.justifyContent = 'center';
+          this.style.fontSize = '1.2rem';
+          this.style.fontWeight = '600';
+          this.style.color = 'white';
+        });
+      });
+    }
+
+    // Advanced tooltip positioning for edge cases
+    function adjustTooltipPosition() {
+      const tooltips = document.querySelectorAll('.tooltip');
+
+      tooltips.forEach(tooltip => {
+        const rect = tooltip.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+
+        // Adjust if tooltip goes off-screen
+        if (rect.left < 10) {
+          tooltip.style.left = '10px';
+          tooltip.style.transform = 'translateX(0)';
+        } else if (rect.right > viewportWidth - 10) {
+          tooltip.style.left = 'auto';
+          tooltip.style.right = '10px';
+          tooltip.style.transform = 'translateX(0)';
+        }
+      });
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeTooltips();
+
+      // Adjust tooltip positions on window resize
+      let resizeTimeout;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(adjustTooltipPosition, 100);
+      });
+    });
+
+  </script>
 
 
     <script>

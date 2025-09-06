@@ -11,7 +11,7 @@ async function checkAuthStatus() {
             document.getElementById('loginLink').style.display = 'none';
             document.getElementById('dashboardLink').style.display = 'inline-block';
             document.getElementById('logoutBtn').style.display = 'inline-block';
-            document.getElementById('startScanningLink').href = '/upload';
+            document.getElementById('startScanningLink').href = '/upload?new=1';
             document.getElementById('viewDashboardLink').style.display = 'inline-block';
             document.getElementById('viewDashboardLink').href = '/dashboard';
             

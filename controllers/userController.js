@@ -53,8 +53,13 @@ class UserController {
             lastLogin: user.lastLogin
           },
           stats: {
-            ...user.stats,
-            ...analytics
+            totalUploads: analytics.totalUploads || user.stats.totalUploads || 0,
+            totalRecycled: analytics.totalRecycled || user.stats.totalRecycled || 0,
+            totalReused: analytics.totalReused || user.stats.totalReused || 0,
+            totalDonated: analytics.totalDonated || user.stats.totalDonated || 0,
+            totalCarbonSaved: analytics.totalCarbonSaved || user.stats.carbonFootprintSaved || 0,
+            totalWasteReduced: analytics.totalWasteReduced || 0,
+            averageProcessingTime: analytics.averageProcessingTime || 0
           },
           recentUploads,
           categories: categoryStats,
@@ -254,6 +259,9 @@ class UserController {
         case 'donated':
           sortField = 'stats.totalDonated';
           break;
+        case 'carbonSaved':
+          sortField = 'stats.carbonFootprintSaved';
+          break;
         default:
           sortField = 'stats.carbonFootprintSaved';
       }
@@ -292,8 +300,9 @@ class UserController {
       ]);
 
       // Get current user's rank
+      const userValue = req.user.stats[sortField.split('.')[1]] || 0;
       const userRank = await User.countDocuments({
-        [sortField]: { $gt: req.user.stats[sortField.split('.')[1]] }
+        [sortField]: { $gt: userValue }
       }) + 1;
 
       res.json({
