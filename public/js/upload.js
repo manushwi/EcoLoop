@@ -567,14 +567,13 @@ function simulateProgress() {
                 uploadText.textContent = step.text;
             }
             currentStep++;
-            setTimeout(updateProgress, 1000);
+            setTimeout(updateProgress, 6000);
         }
     };
 
     updateProgress();
 }
 
-// Wait for AI analysis to complete with improved rate limiting
 async function waitForAnalysis(uploadId) {
     if (analysisCheckInProgress) {
         console.log('Analysis check already in progress');
@@ -762,11 +761,9 @@ function populateAnalysisResults(analysis) {
     const condition = document.getElementById('condition');
 
     if (itemTitle) {
-        const descriptionTitle = (analysis.description || '').split('\n').filter(Boolean)[0]?.trim();
-        if (descriptionTitle && descriptionTitle.length > 0) {
-            itemTitle.textContent = descriptionTitle;
-        } else if (analysis.itemCategory) {
-            itemTitle.textContent = capitalizeFirst(analysis.itemCategory);
+        // Show item name instead of description
+        if (analysis.itemTitle) {
+            itemTitle.textContent = analysis.itemTitle;
         }
     }
 
