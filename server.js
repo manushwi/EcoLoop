@@ -43,7 +43,7 @@ app.use(helmet({
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minutes
+  windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // Limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
@@ -53,7 +53,7 @@ app.use(limiter);
 
 // Stricter rate limiting for auth routes
 const authLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minutes
+  windowMs: 15 * 60 * 1000, // 1 minutes
   max: 1000, // Limit each IP to 100 auth requests per windowMs (increased for dashboard)
   message: 'Too many authentication attempts, please try again later.',
 });
@@ -192,3 +192,7 @@ app.listen(PORT, () => {
   console.log(`🤖 OpenRouter Gemini AI service is ready for image analysis`);
   console.log(`🔑 Make sure to set OPENROUTER_API_KEY environment variable`);
 });
+
+"scripts"; {
+  "start"; "nodemon server.js"
+}

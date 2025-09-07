@@ -51,7 +51,7 @@ class GeminiService {
             const response = await axios.post(
                 this.baseUrl,
                 {
-                    model: 'google/gemini-pro:free',
+                    model: 'google/gemini-2.0-flash-exp:free',
                     messages: [
                         {
                             role: 'user',
