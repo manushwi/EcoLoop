@@ -858,16 +858,9 @@ class Dashboard {
             const icon = this.getHistoryIcon(upload.aiAnalysis?.itemCategory);
             const title = this.getHistoryTitle(upload);
             const subtitle = this.getHistorySubtitle(upload);
-            const imageUrl = (function () {
-                if (upload.fileUrl) return upload.fileUrl;
-                if (upload.filename) return `../uploads/${upload.filename}`;
-                return '';
-            })();
+            
 
             historyItem.innerHTML = `
-        <div class="history-thumb" style="width:56px; height:56px; border-radius:10px; overflow:hidden; background:#1f1f1f; flex:0 0 56px;">
-          <img src="${imageUrl}" alt="Upload preview" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.display='none'">
-        </div>
         <div class="history-details" style="margin-left:12px;">
           <div class="history-title">${title}</div>
           <div class="history-subtitle">${subtitle}</div>

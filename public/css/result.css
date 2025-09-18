@@ -132,7 +132,7 @@ body {
 }
 
 .section-title {
-    font-size: 2.2rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 1.5rem;
@@ -486,7 +486,7 @@ body {
 
 .page-title {
     font-size: 48px;
-    font-weight: 700;
+    font-weight: medium;
     color: white;
     margin-bottom: 15px;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -502,7 +502,7 @@ body {
 
 .description {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: medium;
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 40px;
     line-height: 1.6;

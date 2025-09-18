@@ -115,3 +115,46 @@ window.authFunctions = {
     checkAuthStatus,
     handleLogout
 };
+
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Create menu toggle button
+  const menuToggle = document.createElement('div');
+  menuToggle.className = 'menu-toggle';
+  menuToggle.innerHTML = '<span></span><span></span><span></span>';
+  
+  // Insert toggle button into nav
+  const nav = document.querySelector('nav');
+  nav.appendChild(menuToggle);
+  
+  // Get nav links
+  const navLinks = document.querySelector('.nav-links');
+  
+  // Toggle menu on click
+  menuToggle.addEventListener('click', function() {
+    this.classList.toggle('open');
+    navLinks.classList.toggle('active');
+    
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+  });
+  
+  // Close menu when clicking on a link
+  const navItems = navLinks.querySelectorAll('a, .logout-btn');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuToggle.classList.remove('open');
+      navLinks.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+      menuToggle.classList.remove('open');
+      navLinks.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+});

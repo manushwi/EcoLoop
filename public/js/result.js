@@ -52,9 +52,9 @@
         // Item information header
         if (itemName) {
             html += `
-                <div class="card item-header">
-                    <div class="item-info">
-                        <h2 class="item-name">${escapeHtml(itemName)}</h2>
+                <div style="font-weight: medium;" class="card item-header">
+                    <div style="font-weight: medium;" class="item-info">
+                        <h2 style="font-weight: medium;" class="item-name">${escapeHtml(itemName)}</h2>
                         <div class="item-meta">
                             <span class="category-badge category-${itemCategory}">${itemCategory}</span>
                             <span class="confidence-badge">${Math.round((confidence || 0.8) * 100)}% confidence</span>
