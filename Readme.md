@@ -11,7 +11,7 @@
 - **Impact Dashboard** – Monitor your environmental contribution with metrics like CO₂ saved, waste diverted, and community reach.  
 - **Community Insights** – Share achievements, see what others are doing, and get inspired by real-world sustainable living.
 
-## 🧰 Tech Stack
+## 🧰 Tech Stacks
 
 - Frontend: React, TailwindCSS  
 - Backend: Node.js, Express.js  
